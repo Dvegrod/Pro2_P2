@@ -12,3 +12,5 @@ type
     tNumVotes = integer;
 
 implementation
+
+end.
