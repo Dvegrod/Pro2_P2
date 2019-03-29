@@ -9,24 +9,27 @@ const
 type
     tRequest = char;
 	tItemQ = record
-                request = tRequest;
-                code = string;
-                param1 = string;
-                param2 = string;
+                request : tRequest;
+                code : string;
+                param1 : string;
+                param2 : string;
             end;
     tPosQ = 1 .. QUEUESIZE;
 	tQueue =  record
-			items: array [1..QUEUESIZE] of tDato;
+			items: array [1..QUEUESIZE] of tItemQ;
 			frst,lst: tPosQ; (*frst is the position of the first Item in the Queue, and lst is the position of the last item*)
 			end;
 
 procedure CreateEmptyQueue(var Q: tQueue);
 function IsEmptyQueue(Q: tQueue):boolean;
-function enqueue(d: tItem, var Q: tQueue): boolean;
-function front(Q: tQueue):tItem;
+function enqueue(d: tItemQ; var Q: tQueue): boolean;
+function front(Q: tQueue):tItemQ;
 procedure dequeue(var Q: tQueue);
 	
 implementation
+
+function nextQ(k: tPosQ): tPosQ; forward;
+function IsFullQueue(Q: tQueue):boolean; forward;
 
 procedure CreateEmptyQueue(var Q: tQueue);
 begin
@@ -39,7 +42,7 @@ begin
 	IsEmptyQueue:= nextQ(Q.lst) = Q.frst;
 end;
 
-function enqueue(d: tItem, var Q:tQueue): boolean;
+function enqueue(d: tItemQ; var Q:tQueue): boolean;
 begin
 	if not IsFullQueue(Q) then begin
 		Q.lst:= nextQ(Q.lst);
@@ -50,14 +53,14 @@ begin
 		enqueue:= false;
 end;
 
-function front(Q: tQueue):tItem;
+function front(Q: tQueue):tItemQ;
 begin
 	front:= Q.items[Q.frst];
 end;
 
 procedure dequeue(var Q:tQueue);
 begin
-	Q.frst=nextQ(Q.frst);
+	Q.frst:=nextQ(Q.frst);
 end;
 
 function nextQ(k: tPosQ): tPosQ;
@@ -71,3 +74,4 @@ begin
 	IsFullQueue:= nextQ(nextQ(Q.lst)) = Q.frst;
 end;
 
+end.
