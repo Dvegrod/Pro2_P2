@@ -78,11 +78,11 @@ interface
 		Salida: El elemento en esa posición de la lista
 		Precondición: La posición indicada es una posición válida en la lista*)
 	function findItemC(d:tCenterName; L:tListC):tPosC;
-	(*	Objetivo: Encuentra el primer partido que coincida con el partido buscado y devuelve su posición.
-		Entradas: Un partido político y una lista
+	(*	Objetivo: Encuentra el primer centro que coincida con el centro buscado y devuelve su posición.
+		Entradas: Un centro y una lista
 		Salidas: Una variable de posición
 		Precondicion: La lista es no vacía
-		Poscondicion: Si el partido no se encuentra en la lista la función devolverá NULL*)
+		Poscondicion: Si el centro no se encuentra en la lista la función devolverá NULL*)
 	
 implementation
 
