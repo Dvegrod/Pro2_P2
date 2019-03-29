@@ -1,28 +1,22 @@
-unit DynamicOrderedList;
+unit PartyList;
 
 interface
 	const
 		NULL = nil;
-        BLANKVOTE = 'B';
-        NULLVOTE = 'N';
-	
+
 	type
         tPosL = ^tNode;
         tList = tPosL;
-
-	tPartyName = string;
-        tNumVotes = integer;
-
         tItem = record
-		    partyname: tPartyName;
-                    numvotes: tNumVotes;
+                   partyname: tPartyName;
+                   numvotes: tNumVotes;
       		end;
 
         tNode = record
                     item: tItem;
                     nxt: tPosL;
                 end;
-        
+
 procedure createEmptyList(var L: tList);
     (*  Objetivo: Crea una lista vacía
         Entradas: La variable donde se va a almacenar la lista
@@ -52,11 +46,10 @@ function previous(p:tPosL; L:tList):tPosL;
 	Entrada: Una lista
 	Salida: La posición del elemento anterior
 	Precondición: La posición indicada es una posición válida*)
-function insertItem(d:tItem;p:tPosL; var L : tList): boolean;
-(*	Objetivo: Inserta un elemento en la lista antes de la posición indicada, o al final si la posición es NULL
+function insertItem(d:tItem; var L : tList): boolean;
+(*	Objetivo: Inserta un elemento en la lista en la posición que le corresponde por orden del alfabeto
 	Entrada: Un elemento a insertar, una posición y una lista
 	Salida: La lista con el elemento insertado y un boolean TRUE si se ha insertado correctamente y un FALSE en caso contrario
-	Precondición: La posición indicada es una posición válida en la lista, o bien NULL
 	Postcondición: Las posiciones de los elementos de la lista posteriores al insertado pueden cambiar de valor*)
 procedure deleteAtPosition(p:tPosL; var L : tList);
 (*	Objetivo: Elimina de la lista el elemento que ocupa la posición indicada
@@ -148,7 +141,7 @@ implementation
 		end
 	end;
 	
-	function insertItem(d: tItem; p: tPosL; var L: tList): boolean;
+	function insertItem(d: tItem; var L: tList): boolean;
 		var newnode,ant: tPosL;
 		begin
 			createnode(newnode, d);
@@ -169,7 +162,7 @@ implementation
                   ant^.nxt:=newnode;
                end;
             end;
-			end;    
+			end;
 		end;
 		
     procedure deleteAtPosition(p:tPosL; var L:tList);

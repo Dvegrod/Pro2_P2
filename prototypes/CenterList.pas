@@ -1,4 +1,4 @@
-unit StaticOrderedList;
+unit CenterList;
 
 {
 	TITLE: PROGRAMMING II LABS
@@ -12,30 +12,22 @@ unit StaticOrderedList;
 interface
 
 	const
-	
 		MAX = 25 ; (*tamaño máximo del array*)
-		NULL = 0;  
-        BLANKVOTE = 'B';
-        NULLVOTE = 'N'; 
-		
-	type
+		NULLC = 0;
 
-		tPartyName = string; 
-        
-		tNumVotes = integer;
-        
+	type
         tItem = record
                     partyname: tPartyName;
                     numvotes: tNumVotes;
                     end;
 
 		tPosL = NULL..MAX;
-        
+
 		tList = record
 					data: array [1..MAX] of tItem;
 					fin: tPosL;
 			end;
-			
+
 	procedure createEmptyList(var L: tList);
     (*  Objetivo: Crea una lista vacía
         Entradas: La variable donde se va a almacenar la lista
@@ -65,11 +57,11 @@ interface
 		Entrada: Una lista
 		Salida: La posición del elemento anterior
 		Precondición: La posición indicada es una posición válida*)
-	function insertItem(d:tItem;p:tPosL; var L : tList): boolean;
-	(*	Objetivo: Inserta un elemento en la lista antes de la posición indicada, o al final si la posición es NULL
+	function insertItem(d:tItem; var L : tList): boolean;
+	(*	Objetivo: Inserta un elemento en la lista en la posicion que le corresponde
+   por orden del alfabeto (nombre del centro)
 		Entrada: Un elemento a insertar, una posición y una lista
 		Salida: La lista con el elemento insertado y un boolean TRUE si se ha insertado correctamente y un FALSE en caso contrario
-		Precondición: La posición indicada es una posición válida en la lista, o bien NULL
 		Postcondición: Las posiciones de los elementos de la lista posteriores al insertado pueden cambiar de valor*)
 	procedure deleteAtPosition(p:tPosL; var L : tList);
 	(*	Objetivo: Elimina de la lista el elemento que ocupa la posición indicada
@@ -141,7 +133,7 @@ implementation
     end;
 	
 
-	function insertItem(d: tItem; p:tPosL; var L:tList):boolean;
+	function insertItem(d: tItem; var L:tList):boolean;
 		begin
 			if L.fin = MAX then (*Se controla si el array está lleno*)
 				insertItem:= FALSE
@@ -189,8 +181,8 @@ implementation
 					findItem:= NULL
 				else
 					i:=1;
-         while (i < L.fin) and (L.data[i].partyname < d) do (*Se recorre la lista buscando el elemento y se sale del bucle cuando se lega al final o se encuentra*)
-						i:= i+1;
+          while (i < L.fin) and (L.data[i].partyname < d) do (*Se recorre la lista buscando el elemento y se sale del bucle cuando se lega al final o se encuentra*)
+				  	i:= i+1;
 					if d = L.data[i].partyname then
 						findItem:=i (*Si se encuentra, se devuelve la posición*)
 					else
