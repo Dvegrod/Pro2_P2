@@ -6,7 +6,7 @@ unit CenterList;
 	AUTHOR 1: Carlos Torres Paz LOGIN 1: carlos.torres@udc.es
 	AUTHOR 2: Daniel Sergio Vega Rodriguez LOGIN 2: d.s.vega@udc.es
 	GROUP: 5.4
-	DATE: 22/02/2019
+	DATE: 29/03/2019
 }
 
 interface
@@ -21,14 +21,13 @@ interface
 
     tItemC = record
                 centername  : tCenterName;
-                totalvoters : tNumVotes;
-                validvotes  : tNumVotes;
+                totalvoters,validvotes  : tNumVotes;
                 partylist   : tList;
              end;
 
 		tListC = record
-					data: array [1..MAXC] of tItemC;
-					fin: tPosC;
+					data : array [1..MAXC] of tItemC;
+          fin  : tPosC;
 			end;
 
 	procedure createEmptyCenterList(var L: tListC);
@@ -82,7 +81,19 @@ interface
 		Entradas: Un centro y una lista
 		Salidas: Una variable de posición
 		Precondicion: La lista es no vacía
-		Poscondicion: Si el centro no se encuentra en la lista la función devolverá NULL*)
+		Poscondicion: Si el centro no se encuentra en la lista la función devolverá NULLC*)
+  procedure updateListC(newPartyList : tList; pos : tPosC; var centerList : tListC);
+  (*  Objetivo: actualiza la lista de partidos de la posición indicada perteneciente a la lista de centros.
+   Entradas: La lista de partidos nueva, la posición de la lista a actualizar, la lista de centros en la que se actualiza.
+   Salidas: La lista de centros modificada
+   Precondicion: La posición debe ser válida en la lista de centros
+   *)
+  procedure updateValidVotesC(newNumVotes : tNumVotes; pos : tPosC; var centerList : tListC);
+  (*  Objetivo: actualiza los votos totales de la posición indicada perteneciente a la lista de centros.
+   Entradas: El valor de votos nuevo, la posición de la lista a actualizar, la lista de centros en la que se actualiza.
+   Salidas: La lista de centros modificada
+   Precondicion: La posición debe ser válida en la lista de centros
+   *)
 	
 implementation
 
@@ -181,4 +192,14 @@ implementation
 					else
 						findItemC := NULLC; (*Si se llega al final de la lista sin encontrarlo, se devuelve NULLC*)
 		end;
+
+    procedure updateListC(newPartyList : tList; pos : tPosC; var centerList : tListC);
+    begin
+       centerList.data[pos].partylist := newPartyList;  (*Se sobreescribe la nueva lista de partidos en la posición de la antigua*)
+    end;
+
+    procedure updateValidVotesC(newNumVotes : tNumVotes; pos : tPosC; var centerList : tListC);
+    begin
+       centerList.data[pos].totalvoters := newNumVotes; (*Se sobreescribe el valor nuevo en la posición del viejo*)
+    end;
 end.
