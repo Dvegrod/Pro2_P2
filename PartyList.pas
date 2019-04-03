@@ -39,9 +39,9 @@ function last(L:tList):tPosL;
     Salida: La posición del último elemento
     Precondición: La lista no está vacía    *)
 function next(p:tPosL; L:tList):tPosL;
-(*  Objetivo: Devuelve la posición en la lista del elemento nxtuiente al indicado
+(*  Objetivo: Devuelve la posición en la lista del elemento siguiente al indicado
     Entrada: Una Lista
-    Salida: La posición del elemento nxtuiente
+    Salida: La posición del elemento siguiente
     Precondición: La posición indicada es una posición válida*)
 function previous(p:tPosL; L:tList):tPosL;
 (*	Objetivo: Devuelve la posición en la lista del elemento anterior al indicado
@@ -77,6 +77,11 @@ function findItem(d:tPartyName; L:tList):tPosL;
 	Precondicion: La lista es no vacía
 	Poscondicion: Si el partido no se encuentra en la lista la función devolverá NULL*)
 
+function deleteList(var L:tList);
+(*	Objetivo: Borra todos los elemenos de la lista, dejándola vacía
+	Entradas: Una lista
+	Salidas: La lista vacía*)
+
 
 implementation
 
@@ -99,9 +104,14 @@ implementation
 	var p:tPosL;
 	begin
 		p:=L;
-		while (p^.nxt <> NULL) do (*Itera sobre la lista hasta que el nxtuiente puntero a p apunte a NULL*)
+		while (p^.nxt <> NULL) do (*Itera sobre la lista hasta que el siguiente puntero a p apunte a NULL*)
 			p:= p^.nxt;
 	   last:=p;  (*p sale del bucle siendo el puntero que apunta al último nodo*)
+	end;
+
+	function next(p: tPosL; L:tList):tPosL;
+	begin
+	   next := p^.nxt
 	end;
 	
 	function previous (p: tPosL; L: tList): tPosL;
@@ -112,31 +122,26 @@ implementation
 		else
 		begin
 		        q := L;
-		        while (q^.nxt <> p) do (*El bucle se detiene cuando el nxtuiente puntero es p*)
+		        while (q^.nxt <> p) do (*El bucle se detiene cuando el siguiente puntero es p*)
 				q:= q^.nxt;
 			previous:= q;
 		end;
 	end;
 
-	function next(p: tPosL; L:tList):tPosL;
-	begin
-	   next := p^.nxt
-	end;
-
-  function PosInSer(d : tItem; L : tList): tPosL;
+  function PosInsert(d: tItem; L: tList): tPosL;
   var
      p : tPosL;
   begin
      p := first(L);
      while (p^.nxt <> NULL) and (d.partyname >= p^.nxt^.item.partyname) do
         p := p^.nxt;
-     PosInSer := p;
+     PosInsert := p;
   end;
 	
 	procedure createnode(var newnode: tPosL; d:tItem); (*Funcion auxiliar de insertItem*)
 	begin
 		newnode := NULL;
-		new(newnode);  (*Crea el nuevo nodo y le anxtna los items en caso haber sido inizializado*)
+		new(newnode);  (*Crea el nuevo nodo y le asigna los items en caso haber sido inizializado*)
 		if newnode <> NULL then begin 
 			newnode^.item := d;
 			newnode^.nxt := NULL;
@@ -149,22 +154,22 @@ implementation
 			createnode(newnode, d);
 			if newnode = NULL then insertItem:=FALSE
 			else
-			begin
-         insertItem := TRUE;
-         if isEmptyList(L) then
-            L := newnode
-         else
-            begin
-               if d.partyname <= L^.item.partyname then begin
-                  newnode^.nxt := L;
-                  L := newnode;
-               end else begin
-                  ant := PosInSer(d,L);
-                  newnode^.nxt := ant^.nxt;
-                  ant^.nxt:=newnode;
-               end;
-            end;
-			end;
+				begin
+         	insertItem := TRUE;
+         	if isEmptyList(L) then
+         	   L := newnode
+         	else
+         	   begin
+         	      if d.partyname <= L^.item.partyname then begin
+         	         newnode^.nxt := L;
+         	         L := newnode;
+         	      end else begin
+         	         ant := PosInsert(d,L);
+         	         newnode^.nxt := ant^.nxt;
+         	         ant^.nxt:=newnode;
+         	      end;
+         	   end;
+				end;
 		end;
 		
     procedure deleteAtPosition(p:tPosL; var L:tList);
@@ -179,9 +184,9 @@ implementation
                 end
             else
           begin (* Proceso de eliminación del nodo en una posición intermedia *)
-    				q:= p^.nxt;  (*q = nodo nxtuiente a p*)
+    				q:= p^.nxt;  (*q = nodo siguiente a p*)
     				p^.item := q^.item;  (* Se almacena la informacion de q en p *)
-             p^.nxt := q^.nxt; (*Se enlaza p.nxt al nxtuiente de q*)
+               p^.nxt := q^.nxt; (*Se enlaza p.nxt al siguiente de q*)
     				p := q; (*P ahora apunta al nodo que va a desaparecer*)
     			end;
     		dispose(p); (*Desbloquea la memoria reservada*)
