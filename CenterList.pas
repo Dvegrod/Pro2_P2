@@ -117,11 +117,6 @@ implementation
 			lastC:= L.fin;
 		end;
 		
-	function previousC (p: tPosC; L: tListC): tPosC;
-		begin
-			previousC:= p-1;
-		end;
-		
 	function nextC (p: tPosC; L: tListC): tPosC;
 		begin
 			if p=L.fin then
@@ -130,6 +125,11 @@ implementation
 				nextC:= p+1;
 		end;
 
+	function previousC (p: tPosC; L: tListC): tPosC;
+		begin
+			previousC:= p-1;
+		end;
+		
   function posInsert(d : tItemC; L : tListC): tPosC;
   var
     p : tPosC;
@@ -163,7 +163,7 @@ implementation
            insertItemC:=TRUE;
            L.fin := L.fin + 1;
         end;
-		end;
+	end;
 
 		procedure deleteCenterAtPosition(p: tPosC; var L:tListC);
 			var i: tPosC;
@@ -184,22 +184,24 @@ implementation
 				if isEmptyCenterList(L) then (*Se controla si la lista está vacía*)
 					findItemC:= NULLC
 				else
-					i:=1;
-          while (i < L.fin) and (L.data[i].centername < d) do (*Se recorre la lista buscando el elemento y se sale del bucle cuando se lega al final o se encuentra*)
-				  	i:= i+1;
-					if d = L.data[i].centername then
-						findItemC:=i (*Si se encuentra, se devuelve la posición*)
-					else
-						findItemC := NULLC; (*Si se llega al final de la lista sin encontrarlo, se devuelve NULLC*)
+					begin
+						i:=1;
+          	while (i < L.fin) and (L.data[i].centername < d) do (*Se recorre la lista buscando el elemento y se sale del bucle cuando se lega al final o se pasa del elemento a buscar*)
+				  		i:= i+1;
+						if d = L.data[i].centername then
+							findItemC:=i (*Si se encuentra, se devuelve la posición*)
+						else
+							findItemC := NULLC; (*Si se llega al final de la lista sin encontrarlo, se devuelve NULLC*)
+					end;
 		end;
 
-    procedure updateListC(newPartyList : tList; pos : tPosC; var centerList : tListC);
+    procedure updateListC(newPartyList: tList; pos: tPosC; var centerList: tListC);
     begin
        centerList.data[pos].partylist := newPartyList;  (*Se sobreescribe la nueva lista de partidos en la posición de la antigua*)
     end;
 
-    procedure updateValidVotesC(newNumVotes : tNumVotes; pos : tPosC; var centerList : tListC);
+    procedure updateValidVotesC(newValidVotes: tNumVotes; pos: tPosC; var centerList: tListC);
     begin
-       centerList.data[pos].totalvoters := newNumVotes; (*Se sobreescribe el valor nuevo en la posición del viejo*)
+       centerList.data[pos].validvotes := newValidVotes; (*Se sobreescribe el valor nuevo en la posición del viejo*)
     end;
 end.
