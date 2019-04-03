@@ -88,7 +88,7 @@ interface
    Salidas: La lista de centros modificada
    Precondicion: La posición debe ser válida en la lista de centros
    *)
-  procedure updateValidVotesC(newNumVotes : tNumVotes; pos : tPosC; var centerList : tListC);
+  procedure updateValidVotesC(newValidVotes : tNumVotes; pos : tPosC; var centerList : tListC);
   (*  Objetivo: actualiza los votos totales de la posición indicada perteneciente a la lista de centros.
    Entradas: El valor de votos nuevo, la posición de la lista a actualizar, la lista de centros en la que se actualiza.
    Salidas: La lista de centros modificada
