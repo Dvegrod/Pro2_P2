@@ -48,4 +48,48 @@ begin
   InsertCenter:= temp;
 end;
 
+function insertPartyInCenter(centerName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
+var
+posc: tPosC;
+newparty: tItem;
+temp: boolean;
+begin
+  posc := findItemC(centerName,Mng);
+  temp := (posc <> NULLC);
+  if temp then
+  begin
+    newparty.partyname:= partyName;
+    newparty.numvotes := 0;
+    temp := insertItem(newparty, GetItemC(posc, Mng).partylist );
+  end;
+  insertPartyInCenter:= temp;
+end;
+
+function deleteCenters(var Mng: tManager):integer;
+var
+temp: integer;
+posc : tPosC;
+begin
+  if isEmptyCenterList(Mng) then deleteCenters:= 0;
+  else
+  begin
+    temp:= 0;
+    while not isEmptyCenterList(Mng) and GetItemC(firstC(Mng),Mng).validvotes = 0 do begin (*Primero se borra el primer centro de la lista todas las veces que sea necesario*)
+      deleteCenterAtPosition(firstC(Mng),Mng);
+      temp:= temp+1;
+    end;
+
+    if not isEmptyCenterList(Mng) then (*Si la lista no se ha quedado vacía a base de eliminar el primer elemento repetidas veces, se continúa*)
+      posc := firstC(Mng);
+    
+    while not isEmptyCenterList(Mng) and (nextC(posc,Mng) <> NULL) do
+      if GetItemC(nextC(posc,Mng),Mng).validvotes = 0 then
+        deleteCenterAtPosition(nextC(posc,Mng), Mng)
+        temp:= temp+1;
+      else
+        posc:= nextC(posc,Mng);
+    deleteCenters := temp;
+  end;
+end;
+
 end.
