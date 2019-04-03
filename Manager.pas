@@ -5,7 +5,7 @@ interface
   uses PartyList,CenterList,SharedTypes;
 
   type
-    tManager = tCenterList;
+    tManager = tListC;
 
 implementation
 
@@ -33,7 +33,7 @@ begin
   begin
     createEmptyList(newcenter.partylist);
 
-    newparty.numvotes := 0
+    newparty.numvotes := 0;
     newparty.partyname := NULLVOTE;
     temp := (insertItem(newparty, newcenter.partylist));
 
