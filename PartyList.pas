@@ -76,7 +76,6 @@ function findItem(d:tPartyName; L:tList):tPosL;
 	Salidas: Una variable de posición
 	Precondicion: La lista es no vacía
 	Poscondicion: Si el partido no se encuentra en la lista la función devolverá NULL*)
-
 function deleteList(var L:tList);
 (*	Objetivo: Borra todos los elemenos de la lista, dejándola vacía
 	Entradas: Una lista
