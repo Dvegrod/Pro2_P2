@@ -38,8 +38,8 @@ begin
     temp := (insertItem(newparty, newcenter.partylist));
 
     newparty.partyname := BLANKVOTE;
-    temp := (insertItem(newparty, newcenter.partylist));
-    
+    temp := temp and (insertItem(newparty, newcenter.partylist));
+
     if not temp then
       deleteCenterAtPosition(findItemC(centerName,Mng),Mng); (*Si se ha podido insertar el centro pero no los partidos NULLVOTE o BLANKVOTE*)
       (*Se elimina el centro insertado, ya que no tiene sentido un centro sin su lista de partidos.*)
@@ -52,17 +52,15 @@ function insertPartyInCenter(centerName: tCenterName; partyName: tPartyName; var
 var
 posc: tPosC;
 newparty: tItem;
-temp: boolean;
 begin
   posc := findItemC(centerName,Mng);
-  temp := (posc <> NULLC);
-  if temp then
+  if posc <> NULLC then
   begin
     newparty.partyname:= partyName;
     newparty.numvotes := 0;
-    temp := insertItem(newparty, GetItemC(posc, Mng).partylist );
-  end;
-  insertPartyInCenter:= temp;
+    insertPartyInCenter := insertItem(newparty, GetItemC(posc, Mng).partylist );
+  end else
+    insertPartyInCenter:= false;
 end;
 
 function deleteCenters(var Mng: tManager):integer;
@@ -70,24 +68,26 @@ var
 temp: integer;
 posc : tPosC;
 begin
-  if isEmptyCenterList(Mng) then deleteCenters:= 0;
+  if isEmptyCenterList(Mng) then deleteCenters:= 0
   else
   begin
     temp:= 0;
-    while not isEmptyCenterList(Mng) and GetItemC(firstC(Mng),Mng).validvotes = 0 do begin (*Primero se borra el primer centro de la lista todas las veces que sea necesario*)
+    while not isEmptyCenterList(Mng) and (GetItemC(firstC(Mng),Mng).validvotes = 0) do begin (*Primero se borra el primer centro de la lista todas las veces que sea necesario*)
       deleteCenterAtPosition(firstC(Mng),Mng);
       temp:= temp+1;
     end;
 
     if not isEmptyCenterList(Mng) then (*Si la lista no se ha quedado vacía a base de eliminar el primer elemento repetidas veces, se continúa*)
       posc := firstC(Mng);
-    
-    while not isEmptyCenterList(Mng) and (nextC(posc,Mng) <> NULL) do
+
+    while not isEmptyCenterList(Mng) and (nextC(posc,Mng) <> NULLC) do
       if GetItemC(nextC(posc,Mng),Mng).validvotes = 0 then
-        deleteCenterAtPosition(nextC(posc,Mng), Mng)
+      begin
+        deleteCenterAtPosition(nextC(posc,Mng), Mng);
         temp:= temp+1;
-      else
+      end else
         posc:= nextC(posc,Mng);
+
     deleteCenters := temp;
   end;
 end;
