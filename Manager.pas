@@ -52,7 +52,6 @@ function insertPartyInCenter(centerName: tCenterName; partyName: tPartyName; var
 var
 posc: tPosC;
 newparty: tItem;
-temp: boolean;
 begin
   posc := findItemC(centerName,Mng);
   if (posc <> NULLC) then
@@ -113,18 +112,18 @@ cpos: tPosC;
 ppos: tPosL;
 nvotes: tNumVotes;
 begin
-  cpos := findItemC(cn,Mng)
+  cpos := findItemC(centerName,Mng);
   ppos := findItem(partyName , GetItemC(cpos,Mng).partylist);
   if ppos = NULL then
   begin
     pos := findItem(NULLVOTE, GetItemC(cpos,Mng).partylist);
-    nvotes := GetItem(ppos, GetItemC(cpos,Mng).partylist);
+    nvotes := GetItem(pos, GetItemC(cpos,Mng).partylist);
     nvotes := nvotes+1;
     UpdateVotes(nvotes, ppos, GetItemC(cpos,Mng).partylist);
-    voteInCenter := FALSE
-  end;
+    voteInCenter := FALSE;
+  end
   else
-  begin  
+  begin
     nvotes := GetItem(ppos, GetItemC(cpos,Mng).partylist);
     nvotes := nvotes+1;
     UpdateVotes(nvotes, ppos, GetItemC(cpos,Mng).partylist);
