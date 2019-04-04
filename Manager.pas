@@ -92,4 +92,10 @@ begin
   end;
 end;
 
+procedure deleteManager(var Mng: tManager);
+begin
+  while not isEmptyCenterList(Mng) do
+    deleteCenterAtPosition(firstC(Mng),Mng); (*Queda pendiente de implementar la manera de liberar la memoria dinámica asignada a las partylist de los centros que se eliminan*)
+end;
+
 end.
