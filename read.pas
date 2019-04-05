@@ -10,14 +10,14 @@ begin
    else writeln('+ Error: Create not possible');
 end;
 
-procedure New(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager);
+procedure New(cName: tCenterName; pName: tPartyName; var Mng: tManager);
 begin
    if insertPartyInCenter(cName, pName,Mng) then
       writeln('* New: center ',cName, ' party ',pName)
    else writeln('+ Error: New not possible');
 end;
 
-procedure Vote();
+procedure Vote(cName : tCenterName; pName : tPartyName; var Mng: tManager);
 begin
    if voteInCenter(cName, pName, Mng) then
       writeln('* Vote: center ',cName,' party ',pName)
@@ -30,18 +30,13 @@ begin
       end;
 end;
 
-procedure Remove();
-begin
-
-end;
+procedure RunTasks(var Queue: tQueue; var Mng: tManager); forward;
 
 procedure readTasks(filename:string);
 
 VAR
    usersFile              : text;
    line                   : string;
-   code                   : string;
-   param1,param2, request : string;
    Mng                    : tManager;
    QItem                  : tItemQ;
    Queue                  : tQueue;
@@ -74,11 +69,11 @@ begin
                                        { from position i }
       QItem.param2 := trim(copy(line,15,10));
 
-      if not enqueue(QItem) then
+      if not enqueue(QItem,Queue) then
       begin
          writeln('**** Queue is full ****');
          break;
-      end;   
+      end;
 
    end;
 
@@ -88,7 +83,7 @@ begin
 
 end;
 
-procedure RunTasks(var Queue: tQueue, var Mng: tManager);
+procedure RunTasks(var Queue: tQueue; var Mng: tManager);
 var
 QItem : tItemQ;
 begin
@@ -104,17 +99,17 @@ begin
            writeln;
            Create(QItem.param1,strToInt(QItem.param2),Mng);
         end;
-        ///   New;
+        ///   New
         'N': begin
            writeln(QItem.code,' ', QItem.request, ': center ', QItem.param1,' partyname ',QItem.param2);
            writeln;
         end;
-        ///   Vote;
+        ///   Vote
         'V': begin
            writeln(QItem.code,' ', QItem.request, ': center', QItem.param1,' partyname',QItem.param2);
            writeln;
         end;
-         ///  Remove;
+         ///  Remove
         'R': begin
            writeln(QItem.code,' ', QItem.request,': ');
            writeln;
@@ -124,9 +119,8 @@ begin
            writeln(QItem.code,' ', QItem.request,': ');
            writeln;
            Stats(Mng);
-
-         end;
-
+        end;
+      end;
       dequeue(Queue);
    end;
 end;
