@@ -37,10 +37,10 @@ var
 begin
 
   with newcenter do begin
-    newcenter.centername := centerName;
-    newcenter.totalvoters := numVotes;
-    newcenter.validvotes := 0;
-    newcenter.partylist := NULL;
+    centername := centerName;
+    totalvoters := numVotes;
+    validvotes := 0;
+    partylist := NULL;
   end;
 
   temp:= insertItemC(newcenter,Mng);
