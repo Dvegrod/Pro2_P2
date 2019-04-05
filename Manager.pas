@@ -12,7 +12,7 @@ interface
 
   function InsertCenter(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
 
-  function insertPartyInCenter(cName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
+  function insertPartyInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
 
   function deleteCenters(var Mng: tManager):integer;
 
@@ -20,7 +20,7 @@ interface
 
   procedure Stats(var Mng : tManager);
 
-  function voteInCenter(cName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
+  function voteInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
 
 implementation
 
@@ -66,7 +66,7 @@ begin
   InsertCenter := temp;
 end;
 
-function insertPartyInCenter(cName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
+function insertPartyInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
 var
 posc: tPosC;
 newparty: tItem;
@@ -74,12 +74,12 @@ begin
   posc := findItemC(cName,Mng);
   if (posc = NULLC) then (*Tiene que ser null para la adicion de centro*)
   begin
-    newparty.partyname:= partyName;
+    newparty.partyname:= pName;
     newparty.numvotes := 0;
     insertPartyInCenter := insertItem(newparty, getItemC(posc, Mng).partylist );
   end
   else
-    insertPartyInCenter:= FALSE;
+    insertPartyInCenter:= false;
 end;
 
 function deleteCenters(var Mng: tManager):integer;
@@ -161,31 +161,31 @@ begin
    end;
 end;
 
-function voteInCenter(cName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
+function voteInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
 var
 cpos: tPosC;
 ppos: tPosL;
 nvotes: tNumVotes;
 begin
   cpos := findItemC(cName,Mng);
-  ppos := findItem(partyName , getItemC(cpos,Mng).partylist);
-   if (ppos = NULL) or (getItem(ppos,getItemC(cpos,Mng).partylist).partyname = NULLVOTE) then
-  begin
-    ppos := findItem(NULLVOTE, getItemC(cpos,Mng).partylist);
-    nvotes := GetItem(ppos, getItemC(cpos,Mng).partylist).numvotes;
-    nvotes := nvotes+1;
-    UpdateVotes(nvotes, ppos, getItemC(cpos,Mng).partylist);
-    voteInCenter := FALSE;
-  end
+  if (cpos <> NULLC) then
+    begin
+      ppos := findItem(pName , getItemC(cpos,Mng).partylist);
+      if (ppos <> NULL) then
+      begin
+        updateValidVotesC((getItemC(cpos,Mng).validvotes + 1),cpos,Mng);
+        nvotes := GetItem(ppos, getItemC(cpos,Mng).partylist).numvotes;
+        nvotes := nvotes+1;
+        UpdateVotes(nvotes, ppos, getItemC(cpos,Mng).partylist);
+        voteInCenter := true;
+      end
+      else
+        voteInCenter := false;
+    end;
   else
   begin
-    updateValidVotesC((getItemC(cpos,Mng).validvotes + 1),cpos,Mng);
-    nvotes := GetItem(ppos, getItemC(cpos,Mng).partylist).numvotes;
-    nvotes := nvotes+1;
-    UpdateVotes(nvotes, ppos, getItemC(cpos,Mng).partylist);
-    voteInCenter := TRUE;
+    voteInCenter:= false;
   end;
 end;
-
 
 end.

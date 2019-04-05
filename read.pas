@@ -3,28 +3,36 @@ program main;
 uses sysutils,Manager,SharedTypes,RequestQueue;
 
 
-procedure Create(cName: tCenterName; totalVotes: tNumVotes; var Mng: tManager);
+procedure Create(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager);
 begin
-   if InsertCenter(cName,totalVotes,Mng) then
-      writeln('* Create: center ',cName,' totalvoters ',totalVotes:0)
+   if InsertCenter(cName,numVotes,Mng) then
+      writeln('* Create: center ',cName,' totalvoters ',numVotes:0)
    else writeln('+ Error: Create not possible');
 end;
 
-procedure New();
+procedure New(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager);
 begin
-
+   if insertPartyInCenter(cName, pName,Mng) then
+      writeln('* New: center ',cName, ' party ',pName)
+   else writeln('+ Error: New not possible');
 end;
 
 procedure Vote();
 begin
+   if voteInCenter(cName, pName, Mng) then
+      writeln('* Vote: center ',cName,' party ',pName)
+   else
+      begin
+         write('+ Error: Vote not possible.');
+         if voteInCenter(cName,NULLVOTE, Mng) then
+            writeln(' Party ',pName, ' not found in center ',cName, '. NULLVOTE')
+         else writeln;
+      end;
 end;
 
 procedure Remove();
 begin
-end;
 
-procedure Stats();
-begin
 end;
 
 procedure readTasks(filename:string);

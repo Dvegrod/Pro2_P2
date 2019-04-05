@@ -76,10 +76,6 @@ function findItem(d:tPartyName; L:tList):tPosL;
 	Salidas: Una variable de posición
 	Precondicion: La lista es no vacía
 	Poscondicion: Si el partido no se encuentra en la lista la función devolverá NULL*)
-procedure deleteList(var L:tList);
-(*	Objetivo: Borra todos los elemenos de la lista, dejándola vacía
-	Entradas: Una lista
-	Salidas: La lista vacía*)
 
 
 implementation
@@ -217,11 +213,4 @@ implementation
     end;
 	end;
 	
-	procedure deleteList(var L:tList);
-	begin
-		while (L<> NULL) do  (*Borra de primero a último*)
-		begin
-			deleteAtPosition(first(L) ,L);
-		end;
-	end;
 end.
