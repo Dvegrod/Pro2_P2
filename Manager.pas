@@ -40,14 +40,14 @@ begin
     centername := cName;
     totalvoters := numVotes;
     validvotes := 0;
-    partylist := NULL;
+    createEmptyList(partylist);
   end;
 
   temp:= insertItemC(newcenter,Mng);
 
   if temp then
   begin
-    createEmptyList(getItemC(findItemC(cName,Mng),Mng).partylist); (*Crea la lista de partidos vacía que depende del centro*)
+    { createEmptyList(getItemC(findItemC(cName,Mng),Mng).partylist); (*Crea la lista de partidos vacía que depende del centro*)}
 
     newparty.numvotes := 0;
     newparty.partyname := NULLVOTE;
