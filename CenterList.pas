@@ -10,7 +10,7 @@ unit CenterList;
 }
 
 interface
-  Uses SharedTypes, PartyList;
+Uses SharedTypes, PartyList;
 
 	const
 		MAXC = 25 ; (*tamaño máximo del array*)
@@ -130,14 +130,16 @@ implementation
 			previousC:= p-1;
 		end;
 
-	function insertItemC (d: tItemC, var L:tListC): boolean;
+  function insertItemC (d: tItemC; var L:tListC): boolean;
+  var
+     p : tPosC;
 	begin
-		if L.lst:= MAXC then
-			insertItemC := false;
+		if L.lst = MAXC then
+			insertItemC := false
 		else
 		begin
-			if (isEmptyCenterList(L)) or_then (d.centername >= L.data[L.lst].centername) then
-				L.data[L.lst +1] := d;
+			if (isEmptyCenterList(L)) or (d.centername >= L.data[L.lst].centername) then
+				L.data[L.lst +1] := d
 			else
 				begin
 					p:= L.lst;
