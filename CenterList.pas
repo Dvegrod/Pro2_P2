@@ -27,7 +27,7 @@ interface
 
 		tListC = record
 					data : array [1..MAXC] of tItemC;
-          fin  : tPosC;
+          lst  : tPosC;
 			end;
 
 	procedure createEmptyCenterList(var L: tListC);
@@ -99,12 +99,12 @@ implementation
 
 	procedure createEmptyCenterList(var L:tListC);
 		begin
-			L.fin:= NULLC
+			L.lst:= NULLC
 		end;
 		
 	function isEmptyCenterList (L: tListC): boolean;
 		begin
-			isEmptyCenterList := (L.fin = NULLC);
+			isEmptyCenterList := (L.lst = NULLC);
 		end;
 
 	function firstC (L:tListC): tPosC;
@@ -114,12 +114,12 @@ implementation
 		
 	function lastC (L:tListC): tPosC;
 		begin
-			lastC:= L.fin;
+			lastC:= L.lst;
 		end;
 		
 	function nextC (p: tPosC; L: tListC): tPosC;
 		begin
-			if p=L.fin then
+			if p=L.lst then
 				nextC:=NULLC
 		  else
 				nextC:= p+1;
@@ -139,37 +139,36 @@ implementation
          p := nextC(p,L);
       posInsert := p;
     end;
-	
+		
+		function insertItemC (d: tItemC, var L:tListC): boolean;
 
-	function insertItemC(d: tItemC; var L:tListC):boolean;
-    var
-       p : tPosC;
-    begin
-			if L.fin = MAXC then (*Se controla si el array está lleno*)
-				insertItemC:= FALSE
+		begin
+			if L.lst:= MAXC then
+				insertItemC := false;
 			else
-				begin
-           if (L.fin = 0) or (d.centername >= L.data[L.fin].centername) then
-             L.data[L.fin + 1] := d
-          else begin
-             p := L.fin;
-             while (p <> NULLC) and (d.centername <= L.data[p].centername) do
-             begin
-                L.data[p+1] := L.data[p];
-                p := previousC(p,L);
-             end;
-             L.data[p+1] := d;
-           end;
-           insertItemC:=TRUE;
-           L.fin := L.fin + 1;
-        end;
-	end;
+			begin
+				if (isEmptyCenterList(L)) or_then (d >= L.data[L.lst]) then
+					L.data[L.lst +1] := d;
+				else
+					begin
+						p:= L.lst;
+						while (p>0) and (d <= L.data[p]) do
+						begin
+							L.data[p+1] := L.data[p];
+							p:= previousC(p,L);
+						end;
+						L.data[p+1]:=d;
+					end;
+				L.lst := L.lst+1;
+				insertItemC:= true;
+			end;
+		end;
 
 		procedure deleteCenterAtPosition(p: tPosC; var L:tListC);
 			var i: tPosC;
 			begin
-				L.fin := L.fin -1;
-				for i:= p to L.fin do (*Se mueven todos los elementos siguientes a p una posición hacia atrás*)
+				L.lst := L.lst -1;
+				for i:= p to L.lst do (*Se mueven todos los elementos siguientes a p una posición hacia atrás*)
 					L.data[i] := L.data[i+1]; 
 			end;
 			
@@ -186,7 +185,7 @@ implementation
 				else
 					begin
 						i:=1;
-          	while (i < L.fin) and (L.data[i].centername < d) do (*Se recorre la lista buscando el elemento y se sale del bucle cuando se lega al final o se pasa del elemento a buscar*)
+          	while (i < L.lst) and (L.data[i].centername < d) do (*Se recorre la lista buscando el elemento y se sale del bucle cuando se lega al final o se pasa del elemento a buscar*)
 				  		i:= i+1;
 						if d = L.data[i].centername then
 							findItemC:=i (*Si se encuentra, se devuelve la posición*)
