@@ -30,14 +30,13 @@ begin
       end;
 end;
 
-procedure RunTasks(var Queue: tQueue; var Mng: tManager); forward;
+procedure RunTasks(var Queue: tQueue); forward;
 
 procedure readTasks(filename:string);
 
 VAR
    usersFile              : text;
    line                   : string;
-   Mng                    : tManager;
    QItem                  : tItemQ;
    Queue                  : tQueue;
 
@@ -65,7 +64,7 @@ begin
       QItem.code := trim(copy(line,1,2));
       QItem.request:= line[4];
       QItem.param1 := trim(copy(line,5,10)); { trim removes blank spaces of the string}
-                                         { copy(s, i, j) copies j characters of string s }
+                                       { copy(s, i, j) copies j characters of string s }
                                        { from position i }
       QItem.param2 := trim(copy(line,15,10));
 
@@ -79,14 +78,16 @@ begin
 
    Close(usersFile);
 
-   RunTasks(Queue,Mng);
+   RunTasks(Queue);
 
 end;
 
-procedure RunTasks(var Queue: tQueue; var Mng: tManager);
+procedure RunTasks(var Queue: tQueue);
 var
-QItem : tItemQ;
+QItem  : tItemQ;
+   Mng : tManager;
 begin
+   CreateEmptyManager(Mng);
    while not isEmptyQueue(Queue) do
    begin
       QItem:= front(Queue);
@@ -118,7 +119,7 @@ begin
         'S': begin
            writeln(QItem.code,' ', QItem.request,': ');
            writeln;
-           Stats(Mng);
+          // Stats(Mng);
         end;
       end;
       dequeue(Queue);
