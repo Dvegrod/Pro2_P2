@@ -26,7 +26,6 @@ VAR
 
 BEGIN
 
-   createEmptyManager(Mng);
 
    {proceso de lectura del fichero filename }
 
@@ -39,6 +38,7 @@ BEGIN
       halt(1)
    END;
 
+   createEmptyManager(Mng);
 
    WHILE NOT EOF(usersFile) DO
    BEGIN
