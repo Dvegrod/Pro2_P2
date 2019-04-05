@@ -7,6 +7,21 @@ interface
   type
     tManager = tListC;
 
+
+  procedure createEmptyManager(var Mng: tManager);
+
+  function InsertCenter(centerName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
+
+  function insertPartyInCenter(centerName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
+
+  function deleteCenters(var Mng: tManager):integer;
+
+  procedure deleteManager(var Mng: tManager);
+
+  procedure Stats(Mng : tManager);
+
+  function voteInCenter(centerName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
+
 implementation
 
 procedure createEmptyManager(var Mng: tManager);
@@ -139,6 +154,8 @@ begin
             pos:= next(pos,partylist);
          end;
          writeln('Participation: ', participation:0, ' votes from ',totalvoters:0, ' voters (', (participation*100/totalvoters):2:2 ,'%)');
+
+         writeln;
       end;
    end;
 end;
