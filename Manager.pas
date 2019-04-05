@@ -43,28 +43,27 @@ begin
     newcenter.partylist := NULL;
   end;
 
-  temp:= TRUE;
+  temp:= insertItemC(newcenter,Mng);
 
   if temp then
   begin
-    createEmptyList(newcenter.partylist);
+    createEmptyList(getItemC(findItemC(centerName,Mng),Mng).partylist); (*Crea la lista de partidos vacía que depende del centro*)
 
     newparty.numvotes := 0;
     newparty.partyname := NULLVOTE;
-    temp := (insertItem(newparty, newcenter.partylist));
+    temp := (insertItem(newparty, getItemC(findItemC(centerName,Mng),Mng).partylist)); (*Inserta el partido de nulos*)
 
     newparty.partyname := BLANKVOTE;
-    temp := temp and (insertItem(newparty, newcenter.partylist));
+    temp := temp and (insertItem(newparty, getItemC(findItemC(centerName,Mng),Mng).partylist)); (*Inserta el partido de blancos*)
 
-    if not temp then
+    if not temp then (*Si la memoria dinámica estaba llena*)
     begin
-      deleteList(newcenter.partylist);
-      InsertCenter := false;
+      deleteList(getItemC(findItemC(centerName,Mng),Mng).partylist); (*Borra la lista de partidos*)
+      deleteCenterAtPosition(getItemC(findItemC(centerName,Mng),Mng),Mng); (*Borra el centro ya que no se han podido crear NULLVOTE y BLANKVOTE*)
     end
-    else
-    InsertCenter := insertItemC(newcenter,Mng);
-
   end;
+
+  InsertCenter := temp;
 end;
 
 function insertPartyInCenter(centerName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
