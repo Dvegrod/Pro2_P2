@@ -36,12 +36,14 @@ var
   temp: boolean;
 begin
 
+  with newcenter do begin
+    newcenter.centername := centerName;
+    newcenter.totalvoters := numVotes;
+    newcenter.validvotes := 0;
+    newcenter.partylist := NULL;
+  end;
 
-  newcenter.centername := centerName;
-  newcenter.totalvoters := numVotes;
-  newcenter.validvotes := 0;
-  newcenter.partylist := NULL;
-
+  temp:= TRUE;
 
   if temp then
   begin
@@ -55,10 +57,14 @@ begin
     temp := temp and (insertItem(newparty, newcenter.partylist));
 
     if not temp then
+    begin
       deleteList(newcenter.partylist);
       InsertCenter := false;
-  end else
+    end
+    else
     InsertCenter := insertItemC(newcenter,Mng);
+
+  end;
 end;
 
 function insertPartyInCenter(centerName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
