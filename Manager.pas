@@ -18,7 +18,7 @@ interface
 
   procedure deleteManager(var Mng: tManager);
 
-  procedure Stats(Mng : tManager);
+  procedure Stats(var Mng : tManager);
 
   function voteInCenter(centerName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
 
@@ -36,13 +36,12 @@ var
   temp: boolean;
 begin
 
-  with newcenter do begin
-    centername := centerName;
-    totalvoters := numVotes;
-    validvotes := 0;
-    partylist := NULL;
-  end;
-  temp := (insertItemC(newcenter, Mng));
+
+  newcenter.centername := centerName;
+  newcenter.totalvoters := numVotes;
+  newcenter.validvotes := 0;
+  newcenter.partylist := NULL;
+
 
   if temp then
   begin
@@ -54,13 +53,12 @@ begin
 
     newparty.partyname := BLANKVOTE;
     temp := temp and (insertItem(newparty, newcenter.partylist));
-    
-    if not temp then
-      deleteCenterAtPosition(findItemC(centerName,Mng),Mng); (*Si se ha podido insertar el centro pero no los partidos NULLVOTE o BLANKVOTE*)
-      (*Se elimina el centro insertado, ya que no tiene sentido un centro sin su lista de partidos.*)
-  end;
 
-  InsertCenter:= temp;
+    if not temp then
+      deleteList(newcenter.partylist);
+      InsertCenter := false;
+  end else
+    InsertCenter := insertItemC(newcenter,Mng);
 end;
 
 function insertPartyInCenter(centerName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
@@ -118,45 +116,49 @@ begin
   end;
 end;
 
-procedure Stats(Mng : tManager);
+procedure Stats(var Mng : tManager);
 var
-pos               : tPosL;
-posc              : tPosC;
-item              : tItem; (*Both used to iterate around the list*)
-participation     : tNumVotes; (*Keeps the number of votes that are not null*)
-tempvalidvotes    : tNumVotes;
+pos            : tPosL;
+posc           : tPosC;
+item           : tItem; (*Both used to iterate around the list*)
+participation  : tNumVotes; (*Keeps the number of votes that are not null*)
+tempvalidvotes : tNumVotes;
+center      : tItemC;
 begin
   posc := firstC(Mng);
+  writeln('LOL');
    while (posc <> NULLC) do begin
-      with getItemC(posc,Mng) do begin
-         writeln('Center ',centerName);
-         pos:= first(partylist);
-         item := getItem(pos,partylist);
+      writeln('LOLO');
+      //writeln('Center ',center.centername);
+      pos:= first(getItemC(posc,Mng).partylist);
+      writeln('LOLOL');
+      item := getItem(pos,getItemC(posc,Mng).partylist);
+      writeln('Hasta');
          participation := item.numvotes;
-
-         if validvotes = 0 then tempvalidvotes := 1  (*En el caso de que no haya ningun voto valido para evitar division por cero*)
-         else tempvalidvotes := validvotes;
-
+         writeln('Stage 1');
+      if center.validvotes = 0 then tempvalidvotes := 1  (*En el caso de que no haya ningun voto valido para evitar division por cero*)
+      else tempvalidvotes := center.validvotes;
+         writeln('Stage 2');
          writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (', (item.numvotes*100/tempvalidvotes):2:2, '%)'); (*Prints BLANKVOTE*)
 
-         pos:= next(pos,partylist);
-         item := getItem(pos,partylist);
+      pos:= next(pos,center.partylist);
+      item := getItem(pos,center.partylist);
          participation := participation + item.numvotes;
 
          writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0);(*Prints NULLVOTE*)
 
-         pos:= next(pos,partylist);
-
+      pos:= next(pos,center.partylist);
+         writeln('Stage 3');
          while pos<>NULL do begin
-            item:= getItem(pos,partylist);
+            item:= getItem(pos,center.partylist);
             writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (', (item.numvotes*100/tempvalidvotes):2:2, '%)'); (*Prints all parties on the list*)
             participation := participation + item.numvotes;
-            pos:= next(pos,partylist);
+            pos:= next(pos,center.partylist);
          end;
-         writeln('Participation: ', participation:0, ' votes from ',totalvoters:0, ' voters (', (participation*100/totalvoters):2:2 ,'%)');
+      writeln('Participation: ', participation:0, ' votes from ',center.totalvoters:0, ' voters (', (participation*100/center.totalvoters):2:2 ,'%)');
 
          writeln;
-      end;
+      posc := nextC(posc,Mng);
    end;
 end;
 
