@@ -89,9 +89,12 @@ begin
 end;
 
 procedure RunTasks(var Queue: tQueue, var Mng: tManager);
+var
+QItem : tItemQ;
 begin
    while not isEmptyQueue(Queue) do
    begin
+      QItem:= front(Queue);
 
       writeln('********************');
       case QItem.request of
@@ -123,6 +126,8 @@ begin
            Stats(Mng);
 
          end;
+
+      dequeue(Queue);
    end;
 end;
 
