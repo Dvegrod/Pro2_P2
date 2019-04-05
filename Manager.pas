@@ -188,4 +188,16 @@ begin
   end;
 end;
 
+  procedure deletePartyList(cName: tCenterName,var Mng: tManager);
+  var
+  centerpos: tPosC;
+  plist: tPosL;
+  begin
+    centerpos:= findItemC(cName,Mng);
+    if centerpos <> NULLC then
+      plist := getItemC(centerpos,Mng).partylist;
+    while not isEmptyList(plist) do
+      deleteAtPosition(first(plist),plist);
+  end;
+
 end.
