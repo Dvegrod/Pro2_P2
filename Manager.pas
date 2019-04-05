@@ -24,6 +24,8 @@ interface
 
 implementation
 
+procedure deletePartyList(cName: tCenterName;var Mng: tManager); forward;
+
 procedure createEmptyManager(var Mng: tManager);
 begin
   createEmptyCenterList(Mng);
@@ -58,8 +60,8 @@ begin
 
     if not temp then (*Si la memoria dinámica estaba llena*)
     begin
-      deleteList(getItemC(findItemC(cName,Mng),Mng).partylist); (*Borra la lista de partidos*)
-      deleteCenterAtPosition(getItemC(findItemC(cName,Mng),Mng),Mng); (*Borra el centro ya que no se han podido crear NULLVOTE y BLANKVOTE*)
+      deletePartyList(cName,Mng); (*Borra la lista de partidos*)
+      deleteCenterAtPosition(findItemC(cName,Mng),Mng); (*Borra el centro ya que no se han podido crear NULLVOTE y BLANKVOTE*)
     end
   end;
 
@@ -92,7 +94,7 @@ begin
   begin
     temp:= 0;
     while not isEmptyCenterList(Mng) and (getItemC(firstC(Mng),Mng).validvotes = 0) do begin (*Primero se borra el primer centro de la lista todas las veces que sea necesario*)
-      deleteList(getItemC(firstC(Mng),Mng).partylist);
+      deletePartyList(getItemC(firstC(Mng),Mng).centername,Mng);
       deleteCenterAtPosition(firstC(Mng),Mng);
       temp:= temp+1;
     end;
@@ -103,7 +105,7 @@ begin
     while not isEmptyCenterList(Mng) and (nextC(posc,Mng) <> NULLC) do
       if getItemC(nextC(posc,Mng),Mng).validvotes = 0 then
       begin
-        deleteList(getItemC(nextC(posc,Mng),Mng).partylist);
+        deletePartyList(getItemC(nextC(posc,Mng),Mng).centername,Mng);
         deleteCenterAtPosition(nextC(posc,Mng), Mng);
         temp:= temp+1;
       end
@@ -116,12 +118,12 @@ end;
 procedure deleteManager(var Mng: tManager);
 begin
   while not isEmptyCenterList(Mng) do begin
-    deleteList(getItemC(firstC(Mng),Mng).partylist);
+    deletePartyList(getItemC(firstC(Mng),Mng).centername,Mng);
     deleteCenterAtPosition(firstC(Mng),Mng);
   end;
 end;
 
-procedure Stats(Mng : tManager);
+procedure Stats(var Mng : tManager);
 var
 pos               : tPosL;
 posc              : tPosC;
@@ -132,7 +134,7 @@ begin
   posc := firstC(Mng);
    while (posc <> NULLC) do begin
       with getItemC(posc,Mng) do begin
-         writeln('Center ',cName);
+         writeln('Center ',centername);
          pos:= first(partylist);
          item := getItem(pos,partylist);
          participation := item.numvotes;
@@ -181,23 +183,23 @@ begin
       end
       else
         voteInCenter := false;
-    end;
+    end
   else
   begin
     voteInCenter:= false;
   end;
 end;
 
-  procedure deletePartyList(cName: tCenterName,var Mng: tManager);
-  var
-  centerpos: tPosC;
-  plist: tPosL;
-  begin
-    centerpos:= findItemC(cName,Mng);
-    if centerpos <> NULLC then
+procedure deletePartyList(cName: tCenterName;var Mng: tManager);
+var
+   centerpos: tPosC;
+   plist: tPosL;
+begin
+   centerpos:= findItemC(cName,Mng);
+   if centerpos <> NULLC then
       plist := getItemC(centerpos,Mng).partylist;
-    while not isEmptyList(plist) do
+   while not isEmptyList(plist) do
       deleteAtPosition(first(plist),plist);
-  end;
+end;
 
 end.
