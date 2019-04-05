@@ -1,30 +1,45 @@
 program main;
 
-uses sysutils,Manager,SharedTypes;
+uses sysutils,Manager,SharedTypes,RequestQueue;
 
 
-procedure CreateCenter(centername : tCenterName;totalvotes : tNumVotes;Mng : tManager);
+procedure Create(cName: tCenterName; totalVotes: tNumVotes; var Mng: tManager);
 begin
-   if InsertCenter(centername,totalvotes,Mng) then
-      writeln('* Create: center ',centername,' totalvoters ',totalvotes:0)
+   if InsertCenter(cName,totalVotes,Mng) then
+      writeln('* Create: center ',cName,' totalvoters ',totalVotes:0)
    else writeln('+ Error: Create not possible');
 end;
 
 procedure New();
+begin
+
+end;
+
+procedure Vote();
+begin
+end;
+
+procedure Remove();
+begin
+end;
+
+procedure Stats();
 begin
 end;
 
 procedure readTasks(filename:string);
 
 VAR
-   usersFile              : TEXT;
-   line                   : STRING;
-   code                   : STRING;
+   usersFile              : text;
+   line                   : string;
+   code                   : string;
    param1,param2, request : string;
    Mng                    : tManager;
+   QItem                  : tItemQ;
+   Queue                  : tQueue;
 
 
-BEGIN
+begin
 
 
    {proceso de lectura del fichero filename }
@@ -33,65 +48,82 @@ BEGIN
    Assign(usersFile, filename);
    Reset(usersFile);
    {$i+} { Activate checkout of input/output errors}
-   IF (IoResult <> 0) THEN BEGIN
+   if (IoResult <> 0) then begin
       writeln('**** Error reading '+filename);
       halt(1)
-   END;
+   end;
 
-   createEmptyManager(Mng);
+   CreateEmptyQueue(Queue);
 
-   WHILE NOT EOF(usersFile) DO
-   BEGIN
+   while not EOF(usersFile) do
+   begin
       { Read a line in the file and save it in different variables}
       ReadLn(usersFile, line);
-      code := trim(copy(line,1,2));
-      request:= line[4];
-      param1 := trim(copy(line,5,10)); { trim removes blank spaces of the string}
+      QItem.code := trim(copy(line,1,2));
+      QItem.request:= line[4];
+      QItem.param1 := trim(copy(line,5,10)); { trim removes blank spaces of the string}
                                          { copy(s, i, j) copies j characters of string s }
                                        { from position i }
-      param2 := trim(copy(line,15,10));
+      QItem.param2 := trim(copy(line,15,10));
 
-	  {CHANGE writeln for the corresponding operation}
-      writeln('********************');
-      case request of
-        'C': begin
-           writeln(code,' ', request, ': center ', param1,' totalvoters ',param2);
-           writeln;
-           CreateCenter(param1,strToInt(param2),Mng);
-        end;
-        'N': begin
-           writeln(code,' ', request, ': center ', param1,' partyname ',param2);
-           writeln;
-        ///   New;
-        end;
-        'V': begin
-           writeln(code,' ', request, ': center', param1,' partyname',param2);
-           writeln;
-        ///   Vote;
-        end;
-        'R': begin
-           writeln(code,' ', request,': ');
-           writeln;
-         ///  Remove;
-        end;
-        'S': begin
-           writeln(code,' ', request,': ');
-           writeln;
-           Stats(Mng);
-        end;
-      end;
-   END;
+      if not enqueue(QItem) then
+      begin
+         writeln('**** Queue is full ****');
+         break;
+      end;   
+
+   end;
 
    Close(usersFile);
 
-END;
+   RunTasks(Queue,Mng);
+
+end;
+
+procedure RunTasks(var Queue: tQueue, var Mng: tManager);
+begin
+   while not isEmptyQueue(Queue) do
+   begin
+
+      writeln('********************');
+      case QItem.request of
+        ///  Create
+        'C': begin
+           writeln(QItem.code,' ', QItem.request, ': center ', QItem.param1,' totalvoters ',QItem.param2);
+           writeln;
+           Create(QItem.param1,strToInt(QItem.param2),Mng);
+        end;
+        ///   New;
+        'N': begin
+           writeln(QItem.code,' ', QItem.request, ': center ', QItem.param1,' partyname ',QItem.param2);
+           writeln;
+        end;
+        ///   Vote;
+        'V': begin
+           writeln(QItem.code,' ', QItem.request, ': center', QItem.param1,' partyname',QItem.param2);
+           writeln;
+        end;
+         ///  Remove;
+        'R': begin
+           writeln(QItem.code,' ', QItem.request,': ');
+           writeln;
+        end;
+         ///  Stats
+        'S': begin
+           writeln(QItem.code,' ', QItem.request,': ');
+           writeln;
+           Stats(Mng);
+
+         end;
+   end;
+end;
 
 
 {Main program}
 
-BEGIN
+begin
     if (paramCount>0) then
         readTasks(ParamStr(1))
     else
         readTasks('create.txt');
-END.
+end.

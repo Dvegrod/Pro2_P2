@@ -10,9 +10,9 @@ interface
 
   procedure createEmptyManager(var Mng: tManager);
 
-  function InsertCenter(centerName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
+  function InsertCenter(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
 
-  function insertPartyInCenter(centerName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
+  function insertPartyInCenter(cName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
 
   function deleteCenters(var Mng: tManager):integer;
 
@@ -20,7 +20,7 @@ interface
 
   procedure Stats(var Mng : tManager);
 
-  function voteInCenter(centerName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
+  function voteInCenter(cName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
 
 implementation
 
@@ -29,7 +29,7 @@ begin
   createEmptyCenterList(Mng);
 end;
 
-function InsertCenter(centerName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
+function InsertCenter(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
 var
   newcenter: tItemC;
   newparty: tItem;
@@ -37,7 +37,7 @@ var
 begin
 
   with newcenter do begin
-    centername := centerName;
+    centername := cName;
     totalvoters := numVotes;
     validvotes := 0;
     partylist := NULL;
@@ -47,31 +47,31 @@ begin
 
   if temp then
   begin
-    createEmptyList(getItemC(findItemC(centerName,Mng),Mng).partylist); (*Crea la lista de partidos vacía que depende del centro*)
+    createEmptyList(getItemC(findItemC(cName,Mng),Mng).partylist); (*Crea la lista de partidos vacía que depende del centro*)
 
     newparty.numvotes := 0;
     newparty.partyname := NULLVOTE;
-    temp := (insertItem(newparty, getItemC(findItemC(centerName,Mng),Mng).partylist)); (*Inserta el partido de nulos*)
+    temp := (insertItem(newparty, getItemC(findItemC(cName,Mng),Mng).partylist)); (*Inserta el partido de nulos*)
 
     newparty.partyname := BLANKVOTE;
-    temp := temp and (insertItem(newparty, getItemC(findItemC(centerName,Mng),Mng).partylist)); (*Inserta el partido de blancos*)
+    temp := temp and (insertItem(newparty, getItemC(findItemC(cName,Mng),Mng).partylist)); (*Inserta el partido de blancos*)
 
     if not temp then (*Si la memoria dinámica estaba llena*)
     begin
-      deleteList(getItemC(findItemC(centerName,Mng),Mng).partylist); (*Borra la lista de partidos*)
-      deleteCenterAtPosition(getItemC(findItemC(centerName,Mng),Mng),Mng); (*Borra el centro ya que no se han podido crear NULLVOTE y BLANKVOTE*)
+      deleteList(getItemC(findItemC(cName,Mng),Mng).partylist); (*Borra la lista de partidos*)
+      deleteCenterAtPosition(getItemC(findItemC(cName,Mng),Mng),Mng); (*Borra el centro ya que no se han podido crear NULLVOTE y BLANKVOTE*)
     end
   end;
 
   InsertCenter := temp;
 end;
 
-function insertPartyInCenter(centerName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
+function insertPartyInCenter(cName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
 var
 posc: tPosC;
 newparty: tItem;
 begin
-  posc := findItemC(centerName,Mng);
+  posc := findItemC(cName,Mng);
   if (posc = NULLC) then (*Tiene que ser null para la adicion de centro*)
   begin
     newparty.partyname:= partyName;
@@ -132,7 +132,7 @@ begin
   posc := firstC(Mng);
    while (posc <> NULLC) do begin
       with getItemC(posc,Mng) do begin
-         writeln('Center ',centerName);
+         writeln('Center ',cName);
          pos:= first(partylist);
          item := getItem(pos,partylist);
          participation := item.numvotes;
@@ -161,13 +161,13 @@ begin
    end;
 end;
 
-function voteInCenter(centerName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
+function voteInCenter(cName: tCenterName; partyName: tPartyName; var Mng: tManager):boolean;
 var
 cpos: tPosC;
 ppos: tPosL;
 nvotes: tNumVotes;
 begin
-  cpos := findItemC(centerName,Mng);
+  cpos := findItemC(cName,Mng);
   ppos := findItem(partyName , getItemC(cpos,Mng).partylist);
    if (ppos = NULL) or (getItem(ppos,getItemC(cpos,Mng).partylist).partyname = NULLVOTE) then
   begin
