@@ -135,30 +135,18 @@ begin
    while (posc <> NULLC) do begin
       with getItemC(posc,Mng) do begin
          writeln('Center ',centername);
-         //---BLANKVOTE---------------------------------------------
-         pos:= findItem(BLANKVOTE,partylist);
-         item := getItem(pos,partylist);
-
-         participation := item.numvotes;
-         if validvotes = 0 then tempvalidvotes := 1  (*En el caso de que no haya ningun voto valido para evitar division por cero*)
+         participation := 0;
+         if validvotes = 0 then tempvalidvotes := 1
          else tempvalidvotes := validvotes;
-
-         writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (', (item.numvotes*100/tempvalidvotes):2:2, '%)'); (*Prints BLANKVOTE*)
-         //---NULLVOTE----------------------------------------------
-         pos:= findItem(NULLVOTE,partylist);
-         item := getItem(pos,partylist);
-
-         participation := participation + item.numvotes;
-
-         writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0);(*Prints NULLVOTE*)
          //---PARTIES-----------------------------------------------
          pos:= first(partylist);
          while pos<>NULL do begin
             item:= getItem(pos,partylist);
-            if (item.partyname <> NULLVOTE) and (item.partyname <> BLANKVOTE) then begin
-               writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (', (item.numvotes*100/tempvalidvotes):2:2, '%)'); (*Prints all parties on the list*)
-               participation := participation + item.numvotes;
-            end;
+            if (item.partyname <> NULLVOTE) then
+               writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (', (item.numvotes*100/tempvalidvotes):2:2, '%)') (*Prints all parties on the list*)
+            else
+               writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0);
+            participation := participation + item.numvotes;
             pos:= next(pos,partylist);
          end;
          writeln('Participation: ', participation:0, ' votes from ',totalvoters:0, ' voters (', (participation*100/totalvoters):2:2 ,'%)');
@@ -180,7 +168,7 @@ begin
       ppos := findItem(pName , getItemC(cpos,Mng).partylist);
       if (ppos <> NULL) then
       begin
-        updateValidVotesC((getItemC(cpos,Mng).validvotes + 1),cpos,Mng);
+        if pname <> NULLVOTE then updateValidVotesC((getItemC(cpos,Mng).validvotes + 1),cpos,Mng);
         nvotes := GetItem(ppos, getItemC(cpos,Mng).partylist).numvotes;
         nvotes := nvotes+1;
         UpdateVotes(nvotes, ppos, getItemC(cpos,Mng).partylist);

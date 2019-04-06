@@ -93,34 +93,38 @@ begin
       QItem:= front(Queue);
 
       writeln('********************');
-      case QItem.request of
-        ///  Create
-        'C': begin
-           writeln(QItem.code,' ', QItem.request, ': center ', QItem.param1,' totalvoters ',QItem.param2);
-           writeln;
-           Create(QItem.param1,strToInt(QItem.param2),Mng);
-        end;
-        ///   New
-        'N': begin
-           writeln(QItem.code,' ', QItem.request, ': center ', QItem.param1,' partyname ',QItem.param2);
-           writeln;
-        end;
-        ///   Vote
-        'V': begin
-           writeln(QItem.code,' ', QItem.request, ': center', QItem.param1,' partyname',QItem.param2);
-           writeln;
-        end;
-         ///  Remove
-        'R': begin
-           writeln(QItem.code,' ', QItem.request,': ');
-           writeln;
-        end;
-         ///  Stats
-        'S': begin
-           writeln(QItem.code,' ', QItem.request,': ');
-           writeln;
-           Stats(Mng);
-        end;
+      with QItem do begin
+         case request of
+           ///  Create
+           'C': begin
+              writeln(code,' ', request, ': center ', param1,' totalvoters ',param2);
+              writeln;
+              Create(param1,strToInt(param2),Mng);
+           end;
+           ///   New
+           'N': begin
+              writeln(code,' ', request, ': center ', param1,' party ',param2);
+              writeln;
+              new(param1,param2,Mng);
+           end;
+           ///   Vote
+           'V': begin
+              writeln(code,' ', request, ': center', param1,' party',param2);
+              writeln;
+              vote(param1,param2,Mng);
+           end;
+           ///  Remove
+           'R': begin
+              writeln(code,' ', request,': ');
+              writeln;
+           end;
+           ///  Stats
+           'S': begin
+              writeln(code,' ', request,': ');
+              writeln;
+              Stats(Mng);
+           end;
+         end;
       end;
       dequeue(Queue);
    end;
