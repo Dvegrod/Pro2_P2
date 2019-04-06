@@ -119,7 +119,7 @@ begin
         'S': begin
            writeln(QItem.code,' ', QItem.request,': ');
            writeln;
-          // Stats(Mng);
+           Stats(Mng);
         end;
       end;
       dequeue(Queue);

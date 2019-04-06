@@ -64,15 +64,21 @@ end;
 
 function insertPartyInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
 var
-posc: tPosC;
-newparty: tItem;
+posc        : tPosC;
+newlist     : tList;
+newparty    : tItem;
 begin
   posc := findItemC(cName,Mng);
   if (posc <> NULLC) then
   begin
-    newparty.partyname:= pName;
-    newparty.numvotes := 0;
-    insertPartyInCenter := insertItem(newparty, getItemC(posc, Mng).partylist );
+    newlist := getItemC(findItemC(cName,Mng),Mng).partylist;
+    with newparty do begin
+       partyname := pName;
+       numvotes := 0;
+    end;
+    insertItem(newparty,newlist);
+    updateListC(newlist, posc, Mng);
+    insertPartyInCenter := true;
   end
   else
     insertPartyInCenter:= false;
@@ -129,31 +135,36 @@ begin
    while (posc <> NULLC) do begin
       with getItemC(posc,Mng) do begin
          writeln('Center ',centername);
-         pos:= first(partylist);
+         //---BLANKVOTE---------------------------------------------
+         pos:= findItem(BLANKVOTE,partylist);
          item := getItem(pos,partylist);
-         participation := item.numvotes;
 
+         participation := item.numvotes;
          if validvotes = 0 then tempvalidvotes := 1  (*En el caso de que no haya ningun voto valido para evitar division por cero*)
          else tempvalidvotes := validvotes;
 
          writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (', (item.numvotes*100/tempvalidvotes):2:2, '%)'); (*Prints BLANKVOTE*)
-
-         pos:= next(pos,partylist);
+         //---NULLVOTE----------------------------------------------
+         pos:= findItem(NULLVOTE,partylist);
          item := getItem(pos,partylist);
+
          participation := participation + item.numvotes;
 
          writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0);(*Prints NULLVOTE*)
-
-         pos:= next(pos,partylist);
-
+         //---PARTIES-----------------------------------------------
+         pos:= first(partylist);
          while pos<>NULL do begin
             item:= getItem(pos,partylist);
-            writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (', (item.numvotes*100/tempvalidvotes):2:2, '%)'); (*Prints all parties on the list*)
-            participation := participation + item.numvotes;
+            if (item.partyname <> NULLVOTE) and (item.partyname <> BLANKVOTE) then begin
+               writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (', (item.numvotes*100/tempvalidvotes):2:2, '%)'); (*Prints all parties on the list*)
+               participation := participation + item.numvotes;
+            end;
             pos:= next(pos,partylist);
          end;
          writeln('Participation: ', participation:0, ' votes from ',totalvoters:0, ' voters (', (participation*100/totalvoters):2:2 ,'%)');
       end;
+      writeln;
+      posc := nextC(posc,Mng);
    end;
 end;
 
