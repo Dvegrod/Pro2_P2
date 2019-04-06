@@ -1,0 +1,14 @@
+01 C center2   10
+02 C center1   10
+03 N center1   CC
+04 N center1   AA
+05 N center1   DD
+06 N center2   DD
+07 N center2   CC
+08 S
+09 V center1   AA 
+10 V center1   CC 
+11 V center1   AA 
+12 V center1   AA 
+13 V center1   BB
+14 S

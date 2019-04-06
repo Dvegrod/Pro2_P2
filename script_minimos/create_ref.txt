@@ -1,0 +1,39 @@
+********************
+01 C: center center2 totalvoters 100
+
+* Create: center center2 totalvoters 100
+********************
+02 C: center center4 totalvoters 50
+
+* Create: center center4 totalvoters 50
+********************
+03 C: center center3 totalvoters 80
+
+* Create: center center3 totalvoters 80
+********************
+04 C: center center1 totalvoters 10
+
+* Create: center center1 totalvoters 10
+********************
+05 S: 
+
+Center center1
+Party B numvotes 0 (0.00%)
+Party N numvotes 0
+Participation: 0 votes from 10 voters (0.00%)
+
+Center center2
+Party B numvotes 0 (0.00%)
+Party N numvotes 0
+Participation: 0 votes from 100 voters (0.00%)
+
+Center center3
+Party B numvotes 0 (0.00%)
+Party N numvotes 0
+Participation: 0 votes from 80 voters (0.00%)
+
+Center center4
+Party B numvotes 0 (0.00%)
+Party N numvotes 0
+Participation: 0 votes from 50 voters (0.00%)
+

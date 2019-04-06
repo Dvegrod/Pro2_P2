@@ -1,0 +1,9 @@
+01 C center2   100
+02 C center1   10
+03 N center1   CC
+04 N center1   AA
+05 N center1   DD
+06 N center1   BB
+07 N center2   BB
+08 N center3   FF
+09 S

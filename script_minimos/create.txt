@@ -1,0 +1,5 @@
+01 C center2   100
+02 C center4   50
+03 C center3   80
+04 C center1   10
+05 S

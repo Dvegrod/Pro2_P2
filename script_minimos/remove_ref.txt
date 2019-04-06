@@ -1,0 +1,77 @@
+********************
+01 C: center center2 totalvoters 10
+
+* Create: center center2 totalvoters 10
+********************
+02 C: center center1 totalvoters 10
+
+* Create: center center1 totalvoters 10
+********************
+03 N: center center1 party CC
+
+* New: center center1 party CC
+********************
+04 N: center center1 party AA
+
+* New: center center1 party AA
+********************
+05 N: center center1 party DD
+
+* New: center center1 party DD
+********************
+06 N: center center2 party DD
+
+* New: center center2 party DD
+********************
+07 N: center center2 party CC
+
+* New: center center2 party CC
+********************
+08 S: 
+
+Center center1
+Party AA numvotes 0 (0.00%)
+Party B numvotes 0 (0.00%)
+Party CC numvotes 0 (0.00%)
+Party DD numvotes 0 (0.00%)
+Party N numvotes 0
+Participation: 0 votes from 10 voters (0.00%)
+
+Center center2
+Party B numvotes 0 (0.00%)
+Party CC numvotes 0 (0.00%)
+Party DD numvotes 0 (0.00%)
+Party N numvotes 0
+Participation: 0 votes from 10 voters (0.00%)
+
+********************
+09 V: center center1 party AA
+
+* Vote: center center1 party AA
+********************
+10 V: center center1 party CC
+
+* Vote: center center1 party CC
+********************
+11 V: center center1 party AA
+
+* Vote: center center1 party AA
+********************
+12 V: center center1 party AA
+
+* Vote: center center1 party AA
+********************
+13 R: 
+
+* Remove: center center2
+********************
+14 S: 
+
+Center center1
+Party AA numvotes 3 (75.00%)
+Party B numvotes 0 (0.00%)
+Party CC numvotes 1 (25.00%)
+Party DD numvotes 0 (0.00%)
+Party N numvotes 0
+Participation: 4 votes from 10 voters (40.00%)
+
