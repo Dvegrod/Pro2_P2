@@ -67,6 +67,7 @@ var
 posc        : tPosC;
 newlist     : tList;
 newparty    : tItem;
+temp: boolean;
 begin
   posc := findItemC(cName,Mng);
   if (posc <> NULLC) then
@@ -76,9 +77,10 @@ begin
        partyname := pName;
        numvotes := 0;
     end;
-    insertItem(newparty,newlist);
-    updateListC(newlist, posc, Mng);
-    insertPartyInCenter := true;
+    temp := insertItem(newparty,newlist); (*Comprueba que haya memoria dinámica disponible*)
+    if temp then
+      updateListC(newlist, posc, Mng);
+    insertPartyInCenter := temp;
   end
   else
     insertPartyInCenter:= false;
