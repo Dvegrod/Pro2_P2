@@ -95,24 +95,28 @@ begin
   else
   begin
     temp:= 0;
-    while not isEmptyCenterList(Mng) and (getItemC(firstC(Mng),Mng).validvotes = 0) do begin (*Primero se borra el primer centro de la lista todas las veces que sea necesario*)
-      deletePartyList(getItemC(firstC(Mng),Mng).centername,Mng);
-      deleteCenterAtPosition(firstC(Mng),Mng);
-      temp:= temp+1;
-    end;
+    with getItemC(firstC(Mng),Mng) do
+       while not isEmptyCenterList(Mng) and (validvotes = 0) do begin (*Primero se borra el primer centro de la lista todas las veces que sea necesario*)
+          deletePartyList(centername,Mng);
+          writeln('* Remove: center ', centername);
+          deleteCenterAtPosition(firstC(Mng),Mng);
+          temp:= temp+1;
+       end;
 
     if not isEmptyCenterList(Mng) then (*Si la lista no se ha quedado vacía a base de eliminar el primer elemento repetidas veces, se continúa*)
       posc := firstC(Mng);
 
     while not isEmptyCenterList(Mng) and (nextC(posc,Mng) <> NULLC) do
-      if getItemC(nextC(posc,Mng),Mng).validvotes = 0 then
-      begin
-        deletePartyList(getItemC(nextC(posc,Mng),Mng).centername,Mng);
-        deleteCenterAtPosition(nextC(posc,Mng), Mng);
-        temp:= temp+1;
-      end
-      else
-        posc:= nextC(posc,Mng);
+      with getItemC(nextC(posc,Mng),Mng) do
+         if validvotes = 0 then
+         begin
+            deletePartyList(centername,Mng);
+            deleteCenterAtPosition(nextC(posc,Mng), Mng);
+            writeln('* Remove: center ', centername);
+            temp:= temp+1;
+         end
+         else
+            posc:= nextC(posc,Mng);
     deleteCenters := temp;
   end;
 end;

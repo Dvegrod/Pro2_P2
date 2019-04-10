@@ -30,6 +30,13 @@ begin
       end;
 end;
 
+procedure Remove(var Mng : tManager);
+begin
+   if deleteCenters(Mng) = 0 then writeln('* Remove: No centers removed');
+end;
+
+
+{----------------------------------------}
 procedure RunTasks(var Queue: tQueue); forward;
 
 procedure readTasks(filename:string);
@@ -117,6 +124,7 @@ begin
            'R': begin
               writeln(code,' ', request,': ');
               writeln;
+              Remove(Mng);
            end;
            ///  Stats
            'S': begin
@@ -128,6 +136,7 @@ begin
       end;
       dequeue(Queue);
    end;
+   deleteManager(Mng);
 end;
 
 
