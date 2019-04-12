@@ -137,6 +137,7 @@ item              : tItem; (*Both used to iterate around the list*)
 participation     : tNumVotes; (*Keeps the number of votes that are not null*)
 tempvalidvotes    : tNumVotes;
 begin
+  if  not isEmptyCenterList(Mng) then begin
   posc := firstC(Mng);
    while (posc <> NULLC) do begin
       with getItemC(posc,Mng) do begin
@@ -160,6 +161,7 @@ begin
       writeln;
       posc := nextC(posc,Mng);
    end;
+  end else writeln('+ Error: Stats not possible');
 end;
 
 function voteInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
