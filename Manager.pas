@@ -9,18 +9,51 @@ interface
 
 
   procedure createEmptyManager(var Mng: tManager);
-
+(*
+ Objetivo: inicializa un manager vacío.
+ Entradas: una variable tipo manager.
+ Salidas: la entrada inicializada y vacía.
+ *)
   function InsertCenter(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
-
+(*
+ Objetivo: inserta un nuevo centro en el manager determinado con un numero de votos determinado.
+ Entradas: un nombre de centro, un numero de votos y el manager.
+ Salidas: el manager con el nuevo centro insertado en la posición correspondiente.
+ Postcondición: Las posiciones de los elementos de la lista posteriores al insertado pueden cambiar de valor. &&&&&&&
+ *)
   function insertPartyInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
-
+(*
+ Objetivo: inserta un partido en la lista de partidos de un centro (en el manager especificado).
+ Entradas: el nombre del centro en el que se inserta el partido, el nombre del nuevo partido, el manager en el que se opera.
+ Salidas: el manager modificado y un booleano que es TRUE si la operación ha sido posible.
+ Precondición: el centro debe ser válido.
+ Postcondición: las posiciones de los partidos del centro pueden haber cambiado.
+ *)
   function deleteCenters(var Mng: tManager):integer;
-
+(*
+ Objetivo: elimina los centros electorales cuyo número de votos válidos es 0 y sus respectivas listas de partidos.
+ Entrada: el manager en el que se va a ejecutar la operación.
+ Salida: el manager modificado y un entero cuyo valor es el número de partidos eliminados.
+ *)
   procedure deleteManager(var Mng: tManager);
-
+(*
+ Objetivo: elimina todos los elementos de la multilista (manager).
+ Entradas: el manager que va a ser vaciado.
+ Salidas: el manager vacío.
+ *)
   procedure Stats(var Mng : tManager);
-
+(*
+ Objetivo: muestra una serie de estadísticas de votación y participación de cada uno de los centros.
+ Entradas: la multilista (manager).
+ *)
   function voteInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
+(*
+ Objetivo: incrementa en uno el número de votos del partido especificado en el centro especificado.
+ Entradas: el nombre del centro, el nombre del partido, la multilista.
+ Salidas: la multilista modificada y un booleano que informa de la validez del voto.
+ Precondición: el centro electoral es válido.
+ Postcondición: si el partido no existe en el centro designado, se actualiza el número de votos nulos.
+ *)
 
 implementation
 
