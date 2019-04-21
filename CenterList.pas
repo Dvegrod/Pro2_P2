@@ -62,15 +62,15 @@ Uses SharedTypes, PartyList;
 	function insertItemC(d:tItemC; var L : tListC): boolean;
 	(*	Objetivo: Inserta un elemento en la lista en la posicion que le corresponde
    por orden del alfabeto (nombre del centro)
-		Entrada: Un elemento a insertar, una posición y una lista
+		Entrada: Un elemento a insertar y una lista
 		Salida: La lista con el elemento insertado y un boolean TRUE si se ha insertado correctamente y un FALSE en caso contrario
-		Postcondición: Las posiciones de los elementos de la lista posteriores al insertado pueden cambiar de valor*)
+		Postcondición: Las posiciones de los posibles elementos de la lista posteriores al insertado pueden cambiar de valor*)
 	procedure deleteCenterAtPosition(p:tPosC; var L : tListC);
 	(*	Objetivo: Elimina de la lista el elemento que ocupa la posición indicada
 		Entrada: Una lista y una posición
-		Salida: El elemento en la posición indicada en esa lista
+   Salida: la lista previa sin el elemento que correspondía a la posición designada .
 		Precondición La posición indicada es una posición válida en la lista
-		Postcondición: Tanto la posición del elemento eliminado como aquellas de los elementos de la lista a continuación pueden cambiar de valor*)
+		Postcondición: Tanto la posición del elemento eliminado como aquellas de los posibles siguientes elementos de la lista pueden cambiar de valor*)
 	function getItemC(p:tPosC; L: tListC):tItemC;
 	(*	Objetivo: Devuelve el contenido del elemento de la lista que ocupa la posición indicada
 		Entrada: Una posición y una lista
@@ -134,17 +134,17 @@ implementation
   var
      p : tPosC;
 	begin
-		if L.lst = MAXC then
+    if L.lst = MAXC then   (* Comprueba si el array esta lleno *)
 			insertItemC := false
 		else
 		begin
-			if (isEmptyCenterList(L)) or (d.centername >= L.data[L.lst].centername) then
+      if (isEmptyCenterList(L)) or (d.centername >= L.data[L.lst].centername) then  (* En caso de ser lista vacia o de que el elemento es mayor que el ultimo : *)
 				L.data[L.lst +1] := d
-			else
+      else  (* Los demás casos: *)
 				begin
 					p:= L.lst;
 					while (p>NULLC) and (d.centername <= L.data[p].centername) do
-					begin
+					begin (* Bucle de para alcanzar la posición en la que insertar el nuevo elemento *)
 						L.data[p+1] := L.data[p];
 						p:= previousC(p,L);
 					end;
