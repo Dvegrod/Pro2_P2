@@ -11,15 +11,17 @@ interface
   procedure createEmptyManager(var Mng: tManager);
 (*
  Objetivo: inicializa un manager vacío.
- Entradas: una variable tipo manager.
- Salidas: la entrada inicializada y vacía.
+ Entrada: una variable tipo multilista.
+ Salida: la entrada inicializada y vacía.
  *)
+{ PRECONDICION GENERAL: La variable de tipo tManager debe estar inicializada a la hora de ser usada por las siguientes funciones:}
   function InsertCenter(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
 (*
  Objetivo: inserta un nuevo centro en el manager determinado con un numero de votos determinado.
  Entradas: un nombre de centro, un numero de votos y el manager.
- Salidas: el manager con el nuevo centro insertado en la posición correspondiente.
- Postcondición: Las posiciones de los elementos de la lista posteriores al insertado pueden cambiar de valor. &&&&&&&
+ Salidas: el manager con el nuevo centro insertado en la posición correspondiente y un booleano que es TRUE solo si la operación se completó.
+ Postcondición: Las posiciones de los elementos de la lista posteriores al insertado pueden cambiar de valor. Si habia un centro idéntico en la lista
+ ambos serán conservados.
  *)
   function insertPartyInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
 (*
@@ -174,35 +176,35 @@ procedure Stats(var Mng : tManager);
 var
 pos               : tPosL;
 posc              : tPosC;
-item              : tItem; (*Both used to iterate around the list*)
-participation     : tNumVotes; (*Keeps the number of votes that are not null*)
-tempvalidvotes    : tNumVotes;
+item              : tItem; (*Las variables pos se usan para guardar una posiciones de referencia en la multilista y item como valor temporal*)
+participation     : tNumVotes; (*Guarda la acumulación de votos en un centro*)
+tempvalidvotes    : tNumVotes; (*Variable necesaria debido a la posibilidad de que los votos válidos sean 0*)
 begin
-  if  not isEmptyCenterList(Mng) then begin
-  posc := firstC(Mng);
-   while (posc <> NULLC) do begin
-      with getItemC(posc,Mng) do begin
-         writeln('Center ',centername);
-         participation := 0;
-         if validvotes = 0 then tempvalidvotes := 1
-         else tempvalidvotes := validvotes;
-         //---PARTIES-----------------------------------------------
-         pos:= first(partylist);
-         while pos<>NULL do begin
-            item:= getItem(pos,partylist);
-            if (item.partyname <> NULLVOTE) then
-               writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (', (item.numvotes*100/tempvalidvotes):2:2, '%)') (*Prints all parties on the list*)
-            else
-               writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0);
-            participation := participation + item.numvotes;
-            pos:= next(pos,partylist);
-         end;
-         writeln('Participation: ', participation:0, ' votes from ',totalvoters:0, ' voters (', (participation*100/totalvoters):2:2 ,'%)');
-      end;
-      writeln;
-      posc := nextC(posc,Mng);
-   end;
-  end else writeln('+ Error: Stats not possible');
+  if not isEmptyCenterList(Mng) then begin
+     posc := firstC(Mng);
+     while (posc <> NULLC) do begin  (* Bucle hasta final de lista de centros *)
+        with getItemC(posc,Mng) do begin
+           writeln('Center ',centername);
+           participation := 0;
+           if validvotes = 0 then tempvalidvotes := 1
+           else tempvalidvotes := validvotes;
+           //-/\-Preámbulos-/\------\/-Partidos-del-centro-\/----------------
+           pos:= first(partylist);
+           while pos<>NULL do begin (* Bucle hasta final de lista de partidos *)
+              item:= getItem(pos,partylist);
+              if (item.partyname <> NULLVOTE) then (*Condicional que detecta NULLVOTES para no mostrar porcentaje en el mismo*)
+                 writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (', (item.numvotes*100/tempvalidvotes):2:2, '%)') (*Prints all parties on the list*)
+              else
+                 writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0);
+              participation := participation + item.numvotes;
+              pos:= next(pos,partylist);
+           end; (*Linea final de participación \/--\/ *)
+           writeln('Participation: ', participation:0, ' votes from ',totalvoters:0, ' voters (', (participation*100/totalvoters):2:2 ,'%)');
+        end;
+        writeln; (* <-- Por formato  \/ Siguiente centro \/ *)
+        posc := nextC(posc,Mng);
+     end;
+  end else writeln('+ Error: Stats not possible'); (* En caso de que la lista esté vacía *)
 end;
 
 function voteInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;

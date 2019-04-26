@@ -35,6 +35,7 @@ Uses SharedTypes, PartyList;
         Entradas: La variable donde se va a almacenar la lista
         Salidas: La lista Vacía
         Postcondición: La lista queda inicializada y no contiene elementos  *)
+  {Precondición general para las siguientes subrutinas: la variable tListC debe estar previamente inicializada}
 	function isEmptyCenterList(L:tListC): boolean;
     (*  Objetivo: Comprueba si la lista está vacía
         Entrada: Una lista
