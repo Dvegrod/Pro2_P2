@@ -210,19 +210,19 @@ end;
 function voteInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
 var
 cpos: tPosC;
-ppos: tPosL;
-nvotes: tNumVotes;
+ppos: tPosL; (* Variables pos para usar como localizadoras en la multilista *)
+nvotes: tNumVotes; (* Número para usar temporalmente en calculos *)
 begin
   cpos := findItemC(cName,Mng);
-  if (cpos <> NULLC) then
+  if (cpos <> NULLC) then (*Cierto si encontró el centro *)
     begin
       ppos := findItem(pName , getItemC(cpos,Mng).partylist);
-      if (ppos <> NULL) then
+      if (ppos <> NULL) then  (*Cierto si encontró el partido en el centro *)
       begin
-        if pname <> NULLVOTE then updateValidVotesC((getItemC(cpos,Mng).validvotes + 1),cpos,Mng);
+        if pname <> NULLVOTE then updateValidVotesC((getItemC(cpos,Mng).validvotes + 1),cpos,Mng); (*Fitro de votos nulos*)
         nvotes := GetItem(ppos, getItemC(cpos,Mng).partylist).numvotes;
         nvotes := nvotes+1;
-        UpdateVotes(nvotes, ppos, getItemC(cpos,Mng).partylist);
+        UpdateVotes(nvotes, ppos, getItemC(cpos,Mng).partylist); (* Adición del voto (Extracción-Suma-Actualización) *)
         voteInCenter := true;
       end
       else

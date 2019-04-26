@@ -23,7 +23,8 @@ begin
       writeln('* Vote: center ',cName,' party ',pName)
    else
       begin
-         write('+ Error: Vote not possible.');
+         write('+ Error: Vote not possible.');  (*En caso de no encontrar el partido o el centro da error,
+                                                 en el primer caso error el voto se suma a NULLVOTES *)
          if voteInCenter(cName,NULLVOTE, Mng) then
             writeln(' Party ',pName, ' not found in center ',cName, '. NULLVOTE')
          else writeln;
