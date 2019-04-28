@@ -147,7 +147,7 @@ begin
   begin
     temp:= 0;
     posc := firstC(Mng);
-    while (posc <> NULLC) do
+    while (posc <= lastC(Mng)) do
        with getItemC(posc,Mng) do begin
           if validvotes = 0 then begin
              deletePartyListatCPosition(posc,Mng);
