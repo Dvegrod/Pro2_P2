@@ -126,42 +126,7 @@ begin
     insertPartyInCenter:= false;
 end;
 
-function deleteCenters(var Mng: tManager):integer;
-var
-temp: integer;
-posc : tPosC;
-begin
-  if isEmptyCenterList(Mng) then deleteCenters:= 0
-  else
-  begin
-    temp:= 0;
-    with getItemC(lastC(Mng),Mng) do
-       while not isEmptyCenterList(Mng) and (validvotes = 0) do begin (*Primero se borra el último centro de la lista todas las veces que sea necesario*)
-          deletePartyList(centername,Mng);
-          writeln('* Remove: center ', centername);
-          deleteCenterAtPosition(lastC(Mng),Mng);
-          temp:= temp+1;
-       end;
 
-    if not isEmptyCenterList(Mng) then (*Si la lista no se ha quedado vacía a base de eliminar el último elemento repetidas veces, se continúa*)
-      posc := firstC(Mng);
-
-    while not isEmptyCenterList(Mng) and (previousC(posc,Mng) <> NULLC) do
-      with getItemC(previousC(posc,Mng),Mng) do
-         if validvotes = 0 then
-         begin
-            deletePartyList(centername,Mng);
-            deleteCenterAtPosition(previousC(posc,Mng), Mng);
-            writeln('* Remove: center ', centername);
-            temp:= temp+1;
-         end
-         else
-            posc:= previousC(posc,Mng);
-    deleteCenters := temp;
-  end;
-end;
-
-{-O-}
 procedure deletePartyListatCPosition(cpos: tPosC; var Mng: tManager); (*Función auxiliar para el DeleteCenters*)
 var
    plist : tPosL;
@@ -171,6 +136,33 @@ begin
       deleteAtPosition(first(plist),plist);
    updateListC(plist,cpos,Mng);
 end;
+
+function deleteCenters(var Mng: tManager):integer;
+var
+temp: integer;
+posc : tPosC;
+begin
+  if isEmptyCenterList(Mng) then deleteCenters:= 0
+  else
+  begin
+    temp:= 0;
+    posc := firstC(Mng);
+    while (posc <> NULLC) do
+       with getItemC(posc,Mng) do begin
+          if validvotes = 0 then begin
+             deletePartyListatCPosition(posc,Mng);
+             deleteCenterAtPosition(posc,Mng);
+             writeln('* Remove: center ',centername);
+             temp := temp + 1;
+          end
+          else
+             posc := nextC(posc,Mng);
+       end;
+    deleteCenters := temp;
+  end;
+end;
+
+{-O-}
 
 
 procedure deleteManager(var Mng: tManager);
