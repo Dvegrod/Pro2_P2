@@ -85,8 +85,7 @@ begin
   newparty.partyname:= NULLVOTE;
   temp:= temp and InsertItem(newparty,newpartylist);
 
-  if temp then begin
-
+  if temp then
   with newcenter do begin
     centername := cName;
     totalvoters := numVotes;
@@ -98,19 +97,17 @@ begin
 
   if not temp then (*Si la lista de centros estaba llena*)
       while not isEmptyList(newpartylist) do
-        deleteAtPosition(first(newpartylist),newpartylist) (*Borra la lista de partidos*)
-  InsertCenter := temp;
-
-  end; (*end if temp*)
-
+         deleteAtPosition(first(newpartylist),newpartylist); (*Borra la lista de partidos*)
+  InsertCenter := temp; (* temp es TRUE si y sólo si la operación se completó*)
 end;
 
-function insertPartyInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
+function insertPartyInCenter(cName : tCenterName; pName : tPartyName; var Mng : tManager): boolean;
 var
-posc        : tPosC;
-newlist     : tList;
-newparty    : tItem;
-temp: boolean;
+   posc        : tPosC;
+   newlist     : tList;
+   newparty    : tItem;
+   temp: boolean;
+
 begin
   posc := findItemC(cName,Mng);
   if (posc <> NULLC) then
@@ -164,10 +161,22 @@ begin
   end;
 end;
 
+{-O-}
+procedure deletePartyListatCPosition(cpos: tPosC; var Mng: tManager); (*Función auxiliar para el DeleteCenters*)
+var
+   plist : tPosL;
+begin
+   plist := getItemC(cpos,Mng).partylist;
+   while not isEmptyList(plist) do
+      deleteAtPosition(first(plist),plist);
+   updateListC(plist,cpos,Mng);
+end;
+
+
 procedure deleteManager(var Mng: tManager);
 begin
   while not isEmptyCenterList(Mng) do begin
-    deletePartyListatCPosition(getItemC(lastC(Mng),Mng).partylist,Mng);
+    deletePartyListatCPosition(lastC(Mng),Mng);
     deleteCenterAtPosition(lastC(Mng),Mng);
   end;
 end;
@@ -244,18 +253,8 @@ begin
       plist := getItemC(centerpos,Mng).partylist;
       while not isEmptyList(plist) do
          deleteAtPosition(first(plist),plist);
-      updateListC(plist,cpos,Mng);
+      updateListC(plist,centerpos,Mng);
    end;
-end;
-
-procedure deletePartyListatCPosition(cpos: tPosC; var Mng: tManager); (*Función auxiliar para el DeleteCenters*)
-var
-plist : tPosL;
-begin
-  plist := getItemC(cpos,Mng).partylist;
-  while not isEmptyList(plist) do
-         deleteAtPosition(first(plist),plist);
-         updateListC(plist,cpos,Mng);
 end;
 
 end.
