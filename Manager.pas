@@ -93,7 +93,7 @@ begin
     partylist := newpartylist;
   end;
 
-  temp:= insertItemC(newcenter,Mng);
+  temp:= temp and insertItemC(newcenter,Mng);
 
   if not temp then (*Si la lista de centros estaba llena*)
       while not isEmptyList(newpartylist) do
@@ -186,20 +186,21 @@ begin
      while (posc <> NULLC) do begin  (* Bucle hasta final de lista de centros *)
         with getItemC(posc,Mng) do begin
            writeln('Center ',centername);
-           participation := 0;
-           if validvotes = 0 then tempvalidvotes := 1
+           if validvotes = 0 then tempvalidvotes := 1  (* Protección de la división en el caso de que validvotes sea 0 *)
            else tempvalidvotes := validvotes;
            //-/\-Preámbulos-/\------\/-Partidos-del-centro-\/----------------
            pos:= first(partylist);
            while pos<>NULL do begin (* Bucle hasta final de lista de partidos *)
               item:= getItem(pos,partylist);
               if (item.partyname <> NULLVOTE) then (*Condicional que detecta NULLVOTES para no mostrar porcentaje en el mismo*)
-                 writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (', (item.numvotes*100/tempvalidvotes):2:2, '%)') (*Prints all parties on the list*)
-              else
+                 writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0, ' (',item.numvotes*100/tempvalidvotes:2:2, '%)') (*Prints all parties on the list*)
+              else begin
                  writeln('Party ',item.partyname, ' numvotes ', item.numvotes:0);
-              participation := participation + item.numvotes;
+                 participation := item.numvotes;
+              end;
               pos:= next(pos,partylist);
            end; (*Linea final de participación \/--\/ *)
+           participation := participation +  validvotes; (* El valor previo de participation es el valor de votos nulos *)
            writeln('Participation: ', participation:0, ' votes from ',totalvoters:0, ' voters (', (participation*100/totalvoters):2:2 ,'%)');
         end;
         writeln; (* <-- Por formato  \/ Siguiente centro \/ *)
