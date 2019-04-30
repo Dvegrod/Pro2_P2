@@ -5,14 +5,14 @@ uses sysutils,Manager,SharedTypes,RequestQueue;
 
 procedure Create(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager);
 begin
-   if InsertCenter(cName,numVotes,Mng) then
+   if InsertCenter(cName,numVotes,Mng) then (* Si fue posible la inserción *)
       writeln('* Create: center ',cName,' totalvoters ',numVotes:0)
    else writeln('+ Error: Create not possible');
 end;
 
 procedure New(cName: tCenterName; pName: tPartyName; var Mng: tManager);
 begin
-   if insertPartyInCenter(cName, pName,Mng) then
+   if insertPartyInCenter(cName, pName,Mng) then (* Si fue posible la inserción *)
       writeln('* New: center ',cName, ' party ',pName)
    else writeln('+ Error: New not possible');
 end;
@@ -92,16 +92,15 @@ end;
 
 procedure RunTasks(var Queue: tQueue);
 var
-QItem  : tItemQ;
-   Mng : tManager;
+QItem  : tItemQ;   (* Variable que guarda un nodo de la cola para la extracción de sus datos*)
+   Mng : tManager; (* La multilista que se usará a continuación*)
 begin
-   CreateEmptyManager(Mng);
-   while not isEmptyQueue(Queue) do
+   CreateEmptyManager(Mng); (* Inicialización *)
+   while not isEmptyQueue(Queue) do  (* Las operaciones acaban cuando la cola está vacía *)
    begin
       QItem:= front(Queue);
-
       writeln('********************');
-      with QItem do begin
+      with QItem do begin (* Case que discrimina cada comando con su correspondiente subrutina y formato *)
          case request of
            ///  Create
            'C': begin
@@ -135,9 +134,9 @@ begin
            end;
          end;
       end;
-      dequeue(Queue);
+      dequeue(Queue); (* Borrado del comienzo de la cola (la operación ya ejecutada) *)
    end;
-   deleteManager(Mng);
+   deleteManager(Mng); (* Borrado de la memoria ocupada por la multilista *)
 end;
 
 
