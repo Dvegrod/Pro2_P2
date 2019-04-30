@@ -146,17 +146,18 @@ begin
   else
   begin
     temp:= 0;
-    posc := firstC(Mng);
-    while (posc <= lastC(Mng)) do
+    posc := lastC(Mng);
+    while (posc >= firstC(Mng)) do
        with getItemC(posc,Mng) do begin
           if validvotes = 0 then begin
              deletePartyListatCPosition(posc,Mng);
              deleteCenterAtPosition(posc,Mng);
              writeln('* Remove: center ',centername);
              temp := temp + 1;
+             posc := previousC(posc,Mng);
           end
           else
-             posc := nextC(posc,Mng);
+             posc := previousC(posc,Mng);
        end;
     deleteCenters := temp;
   end;
