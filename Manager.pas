@@ -17,15 +17,15 @@ interface
 { PRECONDICION GENERAL: La variable de tipo tManager debe estar inicializada a la hora de ser usada por las siguientes funciones:}
   function InsertCenter(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
 (*
- Objetivo: inserta un nuevo centro en el manager determinado con un numero de votos determinado.
+ Objetivo: inserta un nuevo centro en el manager determinado con un numero de votantes determinado y los "partidos" B y N con sus votos a 0.
  Entradas: un nombre de centro, un numero de votos y el manager.
  Salidas: el manager con el nuevo centro insertado en la posición correspondiente y un booleano que es TRUE solo si la operación se completó.
- Postcondición: Las posiciones de los elementos de la lista posteriores al insertado pueden cambiar de valor. Si habia un centro idéntico en la lista
- ambos serán conservados.
+ Postcondición: Las posiciones de los elementos de la lista posteriores al insertado pueden cambiar de valor. Si había un centro idéntico en la lista
+ ambos serán conservados (Pero esto dará lugar a problemas en las siguientes operaciones ).
  *)
   function insertPartyInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
 (*
- Objetivo: inserta un partido en la lista de partidos de un centro (en el manager especificado).
+ Objetivo: inserta un partido en la lista de partidos de un centro (en el manager especificado) con sus votos a 0.
  Entradas: el nombre del centro en el que se inserta el partido, el nombre del nuevo partido, el manager en el que se opera.
  Salidas: el manager modificado y un booleano que es TRUE si la operación ha sido posible.
  Precondición: el centro debe ser válido.
