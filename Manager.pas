@@ -138,26 +138,39 @@ end;
 
 function deleteCenters(var Mng: tManager):integer;
 var
-temp: integer; (*Contador de centros eliminados*)
-posc : tPosC; (*Iterador*)
+temp       : integer; (*Contador de centros eliminados*)
+posc, nexposc       : tPosC; (*Iteradores*)
+
 begin
-   temp:= 0;
-   posc := firstC(Mng);
-   while (posc <= lastC(Mng)) do (*Bucle que itera por todos los centros (posición) de izquierda a derecha*)
-      with getItemC(posc,Mng) do begin
+   if isEmptyCenterList(Mng) then deleteCenters := 0   (* Comprobación de que la multilista está vacía *)
+   else begin
+      temp := 0;
+      posc := firstC(Mng);
+      nexposc := nextC(posc,Mng);
+      while (nexposc <> NULLC) do  (* Este bucle va revisando secuencialmente los centros de la multilista salvo la primera posición *)
+         with getItemC(nexposc,Mng) do begin (* Se revisa el nodo nexposc para conservar siempre un nodo anterior al que referirse (posc) *)
+            if validvotes = 0 then begin (* Condición de eliminación *)
+               deletePartyList(nexposc,Mng);
+               deleteCenterAtPosition(nexposc,Mng);
+               writeln('* Remove: center ',centername);
+               temp := temp + 1;
+            end else
+               posc := nexposc; (* En caso de no tener que eliminar el nodo se avanza en la multilista *)
+
+            nexposc := nextC(posc,Mng); (* Haya eliminación o no se actualiza nexposc para ser la posición siguiente de posc *)
+         end;
+      posc := firstC(Mng);
+      with getItemC(posc,Mng) do begin (* Ahora se revisa el primer nodo de la multilista *)
          if validvotes = 0 then begin
             deletePartyList(posc,Mng);
             deleteCenterAtPosition(posc,Mng);
             writeln('* Remove: center ',centername);
             temp := temp + 1;
-         end
-      else
-         posc := nextC(posc,Mng); (*Solo se avanza en este caso ya que cuando se borra un elemento
-                                   el siguiente hereda la posicion del eliminado*)
+         end else;
       end;
-   deleteCenters := temp;
+      deleteCenters := temp;
+   end;
 end;
-
 {-O-}
 
 
