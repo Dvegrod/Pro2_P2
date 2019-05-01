@@ -132,6 +132,7 @@ begin
               writeln;
               Stats(Mng);
            end;
+           otherwise writeln(' + Not a valid request'); (* En caso de algún error con el input *)
          end;
       end;
       dequeue(Queue); (* Borrado del comienzo de la cola (la operación ya ejecutada) *)

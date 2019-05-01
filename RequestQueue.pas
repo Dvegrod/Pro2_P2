@@ -73,7 +73,7 @@ end;
 function enqueue(d: tItemQ; var Q:tQueue): boolean;
 begin
 	if not IsFullQueue(Q) then begin
-		Q.lst:= nextQ(Q.lst);
+		Q.lst:= nextQ(Q.lst);     (* Se actualiza el final de la cola y se introduce el nuevo elemento el el espacio nuevo *)
 		Q.items[Q.lst] := d;
 		enqueue:= true;
 	end
@@ -92,7 +92,7 @@ begin
 end;
 
 function nextQ(k: tPosQ): tPosQ;
-(*Objetivo: Returns the next position to k in the Queue*)
+(*Objetivo: Retorna la posición siguiente a k en la Cola*)
 begin
 	nextQ:= (k mod QUEUESIZE)+1;
 end;
