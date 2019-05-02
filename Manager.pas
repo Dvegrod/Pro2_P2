@@ -16,10 +16,10 @@ interface
   type
     tManager = tListC;
 
-
+(* Manager hace referencia a una multilista ,es decir, una variable tipo tManager*)
   procedure createEmptyManager(var Mng: tManager);
 (*
- Objetivo: inicializa un manager vacío.
+ Objetivo: inicializa una multilista.
  Entrada: una variable tipo multilista.
  Salida: la entrada inicializada y vacía.
  *)
@@ -48,7 +48,7 @@ interface
  *)
   procedure deleteManager(var Mng: tManager);
 (*
- Objetivo: elimina todos los elementos de la multilista (manager).
+ Objetivo: elimina todos los elementos de la multilista (manager) y sus respectivas estructuras subordinadas.
  Entradas: el manager que va a ser vaciado.
  Salidas: el manager vacío.
  *)
@@ -56,6 +56,7 @@ interface
 (*
  Objetivo: muestra una serie de estadísticas de votación y participación de cada uno de los centros.
  Entradas: la multilista (manager).
+ Poscondición: si la multilista está vacía el procedimiento emitirá un mensaje de error por pantalla.
  *)
   function voteInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
 (*
@@ -119,7 +120,7 @@ begin
   posc := findItemC(cName,Mng);
   if (posc <> NULLC) then
   begin
-    newlist := getItemC(findItemC(cName,Mng),Mng).partylist; (* Se obtiene el puntero al primer elemento *)
+    newlist := getItemC(findItemC(cName,Mng),Mng).partylist; (* Se obtiene el puntero al primer elemento de la lista de partidos del centro *)
     with newparty do begin (* Construcción del nuevo partido *)
        partyname := pName;
        numvotes := 0;
@@ -168,6 +169,7 @@ begin
 
             nexposc := nextC(posc,Mng); (* Haya eliminación o no se actualiza nexposc para ser la posición siguiente de posc *)
          end;
+      {----------------------------------------------}
       posc := firstC(Mng);
       with getItemC(posc,Mng) do begin (* Ahora se revisa el primer nodo de la multilista *)
          if validvotes = 0 then begin
