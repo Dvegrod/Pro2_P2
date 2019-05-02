@@ -2,11 +2,11 @@ unit PartyList;
 
 {
 TITLE: PROGRAMMING II LABS
-SUBTITLE: Practical 1
+SUBTITLE: Practical 2
 AUTHOR 1: Carlos Torres Paz LOGIN 1: carlos.torres@udc.es
 AUTHOR 2: Daniel Sergio Vega Rodriguez LOGIN 2: d.s.vega@udc.es
 GROUP: 5.4
-DATE: 22/02/2019
+DATE: 03/05/2019
 }
 
 

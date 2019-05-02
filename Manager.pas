@@ -1,5 +1,14 @@
 unit Manager;
 
+{
+	TITLE: PROGRAMMING II LABS
+	SUBTITLE: Practical 2
+	AUTHOR 1: Carlos Torres Paz LOGIN 1: carlos.torres@udc.es
+	AUTHOR 2: Daniel Sergio Vega Rodriguez LOGIN 2: d.s.vega@udc.es
+	GROUP: 5.4
+	DATE: 03/05/2019
+}
+
 interface
 
   uses PartyList,CenterList,SharedTypes;
@@ -131,7 +140,7 @@ var
    plist : tPosL;
 begin
    plist := getItemC(cpos,Mng).partylist;
-   while not isEmptyList(plist) do (*Eliminación secuancial de los elementos*)
+   while not isEmptyList(plist) do (*Eliminación secuencial de los elementos*)
       deleteAtPosition(first(plist),plist);
    updateListC(plist,cpos,Mng);(* Actualización del puntero para prevenir errores *)
 end;
@@ -171,7 +180,6 @@ begin
       deleteCenters := temp;
    end;
 end;
-{-O-}
 
 
 procedure deleteManager(var Mng: tManager);
@@ -230,7 +238,7 @@ begin
       ppos := findItem(pName , getItemC(cpos,Mng).partylist);
       if (ppos <> NULL) then  (*Cierto si encontró el partido en el centro *)
       begin
-        if pname <> NULLVOTE then updateValidVotesC((getItemC(cpos,Mng).validvotes + 1),cpos,Mng); (*Fitro de votos nulos*)
+        if pname <> NULLVOTE then updateValidVotesC((getItemC(cpos,Mng).validvotes + 1),cpos,Mng); (*Comprueba si el voto es nulo, en cuyo caso no actualiza los votos válidos*)
         nvotes := GetItem(ppos, getItemC(cpos,Mng).partylist).numvotes;
         nvotes := nvotes+1;
         UpdateVotes(nvotes, ppos, getItemC(cpos,Mng).partylist); (* Adición del voto (Extracción-Suma-Actualización) *)
