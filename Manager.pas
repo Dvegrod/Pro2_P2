@@ -209,7 +209,7 @@ begin
   end;
 end;
 
-procedure ShowStats(Mng : tManager);
+procedure ShowStats(var Mng : tManager);
 var
 pos               : tPosL;
 posc              : tPosC;
