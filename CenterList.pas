@@ -30,13 +30,13 @@ Uses SharedTypes, PartyList;
           lst  : tPosC;
 			end;
 
-	procedure createEmptyCenterList(var L: tListC);
+	procedure createEmptyListC(var L: tListC);
     (*  Objetivo: Crea una lista vacía
         Entradas: La variable donde se va a almacenar la lista
         Salidas: La lista Vacía
         Postcondición: La lista queda inicializada y no contiene elementos  *)
   {Precondición general para las siguientes subrutinas: la variable tListC debe estar previamente inicializada}
-	function isEmptyCenterList(L:tListC): boolean;
+	function isEmptyListC(L:tListC): boolean;
     (*  Objetivo: Comprueba si la lista está vacía
         Entrada: Una lista
         Salida: Un boolean TRUE si está vacía y FALSE si no lo está *)
@@ -66,7 +66,7 @@ Uses SharedTypes, PartyList;
 		Entrada: Un elemento a insertar y una lista
 		Salida: La lista con el elemento insertado y un boolean TRUE si se ha insertado correctamente y un FALSE en caso contrario
 		Postcondición: Las posiciones de los posibles elementos de la lista posteriores al insertado pueden cambiar de valor*)
-	procedure deleteCenterAtPosition(p:tPosC; var L : tListC);
+	procedure deleteAtPositionC(p:tPosC; var L : tListC);
 	(*	Objetivo: Elimina de la lista el elemento que ocupa la posición indicada
 		Entrada: Una lista y una posición
    Salida: la lista previa sin el elemento que correspondía a la posición designada .
@@ -98,14 +98,14 @@ Uses SharedTypes, PartyList;
 	
 implementation
 
-	procedure createEmptyCenterList(var L:tListC);
+	procedure createEmptyListC(var L:tListC);
 		begin
 			L.lst:= NULLC
 		end;
 		
-	function isEmptyCenterList (L: tListC): boolean;
+	function isEmptyListC (L: tListC): boolean;
 		begin
-			isEmptyCenterList := (L.lst = NULLC);
+			isEmptyListC := (L.lst = NULLC);
 		end;
 
 	function firstC (L:tListC): tPosC;
@@ -139,7 +139,7 @@ implementation
 			insertItemC := false
 		else
 		begin
-      if (isEmptyCenterList(L)) or (d.centername >= L.data[L.lst].centername) then  (* En caso de ser lista vacia o de que el elemento es mayor que el ultimo : *)
+      if (isEmptyListC(L)) or (d.centername >= L.data[L.lst].centername) then  (* En caso de ser lista vacia o de que el elemento es mayor que el ultimo : *)
 				L.data[L.lst +1] := d
       else  (* Los demás casos: *)
 				begin
@@ -156,7 +156,7 @@ implementation
 		end;
 	end;
 
-	procedure deleteCenterAtPosition(p: tPosC; var L:tListC);
+	procedure deleteAtPositionC(p: tPosC; var L:tListC);
 		var i: tPosC;
 		begin
 			L.lst := L.lst -1;
@@ -172,7 +172,7 @@ implementation
 	function findItemC (d: tCenterName; L: tListC): tPosC;
 		var i: tPosC;
 		begin
-			if isEmptyCenterList(L) then (*Se controla si la lista está vacía*)
+			if isEmptyListC(L) then (*Se controla si la lista está vacía*)
 				findItemC:= NULLC
 			else
 				begin

@@ -14,7 +14,7 @@ uses sysutils,Manager,SharedTypes,RequestQueue;
 
 procedure Create(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager);
 begin
-   if InsertCenter(cName,numVotes,Mng) then (* Si fue posible la inserción *)
+   if insertCenter(cName,numVotes,Mng) then (* Si fue posible la inserción *)
       writeln('* Create: center ',cName,' totalvoters ',numVotes:0)
    else writeln('+ Error: Create not possible');
 end;
@@ -45,9 +45,9 @@ begin
    if deleteCenters(Mng) = 0 then writeln('* Remove: No centers removed');
 end;
 
-procedure ShowStats(var Mng: tManager);
+procedure Stats(var Mng: tManager);
 begin
-   Stats(Mng);
+   ShowStats(Mng);
 end;
 
 
@@ -77,7 +77,7 @@ begin
       halt(1)
    end;
 
-   CreateEmptyQueue(Queue);
+   createEmptyQueue(Queue);
 
    while not EOF(usersFile) do
    begin

@@ -24,7 +24,7 @@ interface
  Salida: la entrada inicializada y vacía.
  *)
 { PRECONDICION GENERAL: La variable de tipo tManager debe estar inicializada a la hora de ser usada por las siguientes funciones:}
-  function InsertCenter(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
+  function insertCenter(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
 (*
  Objetivo: inserta un nuevo centro en el manager determinado con un numero de votantes determinado y los "partidos" B y N con sus votos a 0.
  Entradas: un nombre de centro, un numero de votos y el manager.
@@ -52,7 +52,7 @@ interface
  Entradas: el manager que va a ser vaciado.
  Salidas: el manager vacío.
  *)
-  procedure Stats(var Mng : tManager);
+  procedure ShowStats(var Mng : tManager);
 (*
  Objetivo: muestra una serie de estadísticas de votación y participación (Número, y porcentajes salvo en NULOS) de cada uno de los centros por separado.
  Entradas: la multilista (manager).
@@ -71,10 +71,10 @@ implementation
 
 procedure createEmptyManager(var Mng: tManager);
 begin
-  createEmptyCenterList(Mng);
+  createEmptyListC(Mng);
 end;
 
-function InsertCenter(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
+function insertCenter(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager):boolean;
 var
   newcenter: tItemC;
   newparty: tItem;
@@ -107,9 +107,9 @@ begin
     if not temp then (*Si la lista de centros estaba llena*)
         while not isEmptyList(newpartylist) do
            deleteAtPosition(first(newpartylist),newpartylist); (*Borra la lista de partidos*)
-    InsertCenter := temp; (* temp es TRUE si y sólo si la operación se completó*)
+    insertCenter := temp; (* temp es TRUE si y sólo si la operación se completó*)
   end else
-    InsertCenter:=false;
+    insertCenter:=false;
 end;
 
 
@@ -156,29 +156,29 @@ var
 temp: integer;
 posc,preposc : tPosC;
 begin
-  if isEmptyCenterList(Mng) then deleteCenters:= 0
+  if isEmptyListC(Mng) then deleteCenters:= 0
   else
   begin
     temp:= 0;
-       while not isEmptyCenterList(Mng) and (getItemC(lastC(Mng),Mng).validvotes = 0) do begin (*Primero se borra el último centro de la lista todas las veces que sea necesario*)
+       while not isEmptyListC(Mng) and (getItemC(lastC(Mng),Mng).validvotes = 0) do begin (*Primero se borra el último centro de la lista todas las veces que sea necesario*)
           deletePartyList(lastC(Mng),Mng);
           writeln('* Remove: center ', getItemC(lastC(Mng),Mng).centername);
-          deleteCenterAtPosition(lastC(Mng),Mng);
+          deleteAtPositionC(lastC(Mng),Mng);
           temp:= temp+1;
        end;
 
-    if not isEmptyCenterList(Mng) then begin (*Si la lista no se ha quedado vacía a base de eliminar el último elemento repetidas veces, se continúa*)
+    if not isEmptyListC(Mng) then begin (*Si la lista no se ha quedado vacía a base de eliminar el último elemento repetidas veces, se continúa*)
       posc := lastC(Mng);
       preposc := previousC(posc,Mng);
     end;
 
-    while not isEmptyCenterList(Mng) and (preposc <> NULLC) do
+    while not isEmptyListC(Mng) and (preposc <> NULLC) do
        with getItemC(preposc,Mng) do begin
          if validvotes = 0 then
          begin
             deletePartyList(preposc,Mng);
             writeln('* Remove: center ', centername);
-            deleteCenterAtPosition(preposc, Mng);
+            deleteAtPositionC(preposc, Mng);
             temp:= temp+1;
          end
          else
@@ -195,13 +195,13 @@ en el caso de que la lista de centros pasase a ser dinámica*)
 
 procedure deleteManager(var Mng: tManager);
 begin
-  while not isEmptyCenterList(Mng) do begin
+  while not isEmptyListC(Mng) do begin
     deletePartyList(lastC(Mng),Mng);
-    deleteCenterAtPosition(lastC(Mng),Mng);
+    deleteAtPositionC(lastC(Mng),Mng);
   end;
 end;
 
-procedure Stats(var Mng : tManager);
+procedure ShowStats(var Mng : tManager);
 var
 pos               : tPosL;
 posc              : tPosC;
@@ -209,7 +209,7 @@ item              : tItem; (*Las variables pos se usan para guardar una posicion
 participation     : tNumVotes; (*Guarda la acumulación de votos en un centro*)
 tempvalidvotes    : tNumVotes; (*Variable necesaria debido a la posibilidad de que los votos válidos sean 0*)
 begin
-  if not isEmptyCenterList(Mng) then begin
+  if not isEmptyListC(Mng) then begin
      posc := firstC(Mng);
      while (posc <> NULLC) do begin  (* Bucle hasta final de lista de centros *)
         with getItemC(posc,Mng) do begin
@@ -234,7 +234,7 @@ begin
         writeln; (* <-- Por formato  \/ Siguiente centro \/ *)
         posc := nextC(posc,Mng);
      end;
-  end else writeln('+ Error: Stats not possible'); (* En caso de que la lista esté vacía *)
+  end else writeln('+ Error: ShowStats not possible'); (* En caso de que la lista esté vacía *)
 end;
 
 function voteInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;

@@ -29,14 +29,14 @@ type
                 frst,lst: tPosQ; (*frst is the position of the first Item in the Queue, and lst is the position of the last item*)
              end;
 
-procedure CreateEmptyQueue(var Q: tQueue);
+procedure createEmptyQueue(var Q: tQueue);
 (*
  Objetivo: inicializa una variable cola.
  Entrada: una variable cola.
  Salida: la variable cola inicializada.
  *)
 {Para las siguientes se comparte la Precondición: la cola debe estar inicializada}
-function IsEmptyQueue(Q: tQueue):boolean;
+function isEmptyQueue(Q: tQueue):boolean;
 (*
  Objetivo: informa si una cola está vacía.
  Entrada: una cola.
@@ -68,15 +68,15 @@ implementation
 function nextQ(k: tPosQ): tPosQ; forward;
 function IsFullQueue(Q: tQueue):boolean; forward;
 
-procedure CreateEmptyQueue(var Q: tQueue);
+procedure createEmptyQueue(var Q: tQueue);
 begin
 	Q.frst:= 1;
 	Q.lst:= QUEUESIZE;
 end;
 
-function IsEmptyQueue(Q:tQueue):boolean;
+function isEmptyQueue(Q:tQueue):boolean;
 begin
-	IsEmptyQueue:= nextQ(Q.lst) = Q.frst;
+	isEmptyQueue:= nextQ(Q.lst) = Q.frst;
 end;
 
 function enqueue(d: tItemQ; var Q:tQueue): boolean;
