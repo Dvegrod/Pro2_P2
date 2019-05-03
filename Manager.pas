@@ -169,8 +169,8 @@ begin
          if getItemC(previousC(posc,Mng),Mng).validvotes = 0 then
          begin
             deletePartyList(previousC(posc,Mng),Mng);
-            deleteCenterAtPosition(previousC(posc,Mng), Mng);
             writeln('* Remove: center ', getItemC(previousC(posc,Mng),Mng).centername);
+            deleteCenterAtPosition(previousC(posc,Mng), Mng);
             temp:= temp+1;
          end
          else
