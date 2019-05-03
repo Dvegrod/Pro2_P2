@@ -164,7 +164,7 @@ begin
        end;
 
     if not isEmptyCenterList(Mng) then (*Si la lista no se ha quedado vacía a base de eliminar el último elemento repetidas veces, se continúa*)
-      posc := firstC(Mng);
+      posc := lastC(Mng);
 
     while not isEmptyCenterList(Mng) and (previousC(posc,Mng) <> NULLC) do
       with getItemC(previousC(posc,Mng),Mng) do
