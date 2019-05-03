@@ -63,7 +63,6 @@ interface
  Objetivo: incrementa en uno el número de votos del partido especificado en el centro especificado.
  Entradas: el nombre del centro, el nombre del partido, la multilista.
  Salidas: la multilista modificada y un booleano que informa de la validez del voto.
- Precondición: el centro electoral es válido.
  Postcondición: si el partido no existe en el centro designado, se actualiza el número de votos nulos.
  *)
 
