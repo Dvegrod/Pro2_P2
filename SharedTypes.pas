@@ -13,12 +13,12 @@ interface
 
 const
     BLANKVOTE = 'B';
-    NULLVOTE = 'N';
+    NULLVOTE = 'N'; (* Constantes que heredarán los TADS y el programa principal *)
 
 type
     tPartyName = string;
     tCenterName = string;
-    tNumVotes = integer;
+    tNumVotes = integer; (* Constantes que heredarán los TADS y el programa principal *)
 
 implementation
 

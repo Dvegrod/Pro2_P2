@@ -38,7 +38,7 @@ interface
  Entradas: el nombre del centro en el que se inserta el partido, el nombre del nuevo partido, el manager en el que se opera.
  Salidas: el manager modificado y un booleano que es TRUE si la operación ha sido posible.
  Precondición: el centro debe ser válido.
- Postcondición: las posiciones de los partidos del centro pueden haber cambiado.
+ Postcondición: las posiciones de los partidos del centro pueden haber cambiado, si el partido a introducir ya existe la función devuelve FALSE.
  *)
   function deleteCenters(var Mng: tManager):integer;
 (*
@@ -56,6 +56,8 @@ interface
 (*
  Objetivo: muestra una serie de estadísticas de votación y participación (Número, y porcentajes salvo en NULOS) de cada uno de los centros por separado.
  Entradas: la multilista (manager).
+ Salidas: texto por pantalla
+ (El manager se pasa por referencia por eficiencia de la memoria, no se modifica en ningún momento)).
  Poscondición: si la multilista está vacía el procedimiento emitirá un mensaje de error por pantalla.
  *)
   function voteInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
@@ -63,7 +65,7 @@ interface
  Objetivo: incrementa en uno el número de votos del partido especificado en el centro especificado.
  Entradas: el nombre del centro, el nombre del partido, la multilista.
  Salidas: la multilista modificada y un booleano que informa de la validez del voto.
- Postcondición: si el partido no existe en el centro designado, se actualiza el número de votos nulos.
+ Postcondición: si el partido no existe en el centro o si el centro no es válido devuelve FALSE.
  *)
 
 implementation
@@ -207,7 +209,7 @@ begin
   end;
 end;
 
-procedure ShowStats(var Mng : tManager);
+procedure ShowStats(Mng : tManager);
 var
 pos               : tPosL;
 posc              : tPosC;
