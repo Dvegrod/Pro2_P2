@@ -170,7 +170,7 @@ begin
       with getItemC(previousC(posc,Mng),Mng) do
          if validvotes = 0 then
          begin
-            deletePartyList(previousC(posc),Mng);
+            deletePartyList(previousC(posc,Mng),Mng);
             deleteCenterAtPosition(previousC(posc,Mng), Mng);
             writeln('* Remove: center ', centername);
             temp:= temp+1;
