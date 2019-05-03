@@ -155,10 +155,9 @@ begin
   else
   begin
     temp:= 0;
-    with getItemC(lastC(Mng),Mng) do
-       while not isEmptyCenterList(Mng) and (validvotes = 0) do begin (*Primero se borra el último centro de la lista todas las veces que sea necesario*)
+       while not isEmptyCenterList(Mng) and (getItemC(lastC(Mng),Mng).validvotes = 0) do begin (*Primero se borra el último centro de la lista todas las veces que sea necesario*)
           deletePartyList(lastC(Mng),Mng);
-          writeln('* Remove: center ', centername);
+          writeln('* Remove: center ', getItemC(lastC(Mng),Mng).centername);
           deleteCenterAtPosition(lastC(Mng),Mng);
           temp:= temp+1;
        end;
@@ -167,12 +166,11 @@ begin
       posc := lastC(Mng);
 
     while not isEmptyCenterList(Mng) and (previousC(posc,Mng) <> NULLC) do
-      with getItemC(previousC(posc,Mng),Mng) do
-         if validvotes = 0 then
+         if getItemC(previousC(posc,Mng),Mng).validvotes = 0 then
          begin
             deletePartyList(previousC(posc,Mng),Mng);
             deleteCenterAtPosition(previousC(posc,Mng), Mng);
-            writeln('* Remove: center ', centername);
+            writeln('* Remove: center ', getItemC(previousC(posc,Mng),Mng).centername);
             temp:= temp+1;
          end
          else
