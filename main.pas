@@ -130,7 +130,7 @@ begin
            end;
            ///   Vote
            'V': begin
-              writeln(code,' ', request, ': center', param1,' party',param2);
+              writeln(code,' ', request, ': center ', param1,' party',param2);
               writeln;
               vote(param1,param2,Mng);
            end;
