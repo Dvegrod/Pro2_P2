@@ -79,34 +79,33 @@ var
   newcenter: tItemC;
   newparty: tItem;
   newpartylist: tList;
-  temp: boolean;
 
 begin
   createEmptyList(newpartylist);
-
   with newparty do begin
     partyname:= BLANKVOTE;
     numvotes:= 0;
   end;
 
-  temp:= InsertItem(newparty,newpartylist);
-  newparty.partyname:= NULLVOTE;
-  temp:= temp and InsertItem(newparty,newpartylist);
-
-  if temp then
-  with newcenter do begin
-    centername := cName;
-    totalvoters := numVotes;
-    validvotes := 0;
-    partylist := newpartylist;
-  end;
-
-  temp:= temp and insertItemC(newcenter,Mng);
-
-  if not temp then (*Si la lista de centros estaba llena*)
-      while not isEmptyList(newpartylist) do
-         deleteAtPosition(first(newpartylist),newpartylist); (*Borra la lista de partidos*)
-  InsertCenter := temp; (* temp es TRUE si y sólo si la operación se completó*)
+  if InsertItem(newparty,newpartylist) then begin
+     newparty.partyname:= NULLVOTE;
+     if InsertItem(newparty,newpartylist) then begin
+        with newcenter do begin
+           centername := cName;
+           totalvoters := numVotes;
+           validvotes := 0;
+           partylist := newpartylist;
+        end;
+        if not(insertItemC(newcenter,Mng)) then begin
+           while not isEmptyList(newpartylist) do
+              deleteAtPosition(first(newpartylist),newpartylist); (*Borra la lista de partidos*)
+           InsertCenter := false; (* temp es TRUE si y sólo si la operación se completó*)
+        end else
+           InsertCenter := true;
+     end else
+        InsertCenter := false;
+  end else
+     InsertCenter := false;
 end;
 
 function insertPartyInCenter(cName : tCenterName; pName : tPartyName; var Mng : tManager): boolean;
