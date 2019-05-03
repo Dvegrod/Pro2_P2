@@ -157,7 +157,7 @@ begin
     temp:= 0;
     with getItemC(lastC(Mng),Mng) do
        while not isEmptyCenterList(Mng) and (validvotes = 0) do begin (*Primero se borra el último centro de la lista todas las veces que sea necesario*)
-          deletePartyList(centername,Mng);
+          deletePartyList(lastC(Mng),Mng);
           writeln('* Remove: center ', centername);
           deleteCenterAtPosition(lastC(Mng),Mng);
           temp:= temp+1;
@@ -170,7 +170,7 @@ begin
       with getItemC(previousC(posc,Mng),Mng) do
          if validvotes = 0 then
          begin
-            deletePartyList(centername,Mng);
+            deletePartyList(previousC(posc),Mng);
             deleteCenterAtPosition(previousC(posc,Mng), Mng);
             writeln('* Remove: center ', centername);
             temp:= temp+1;
