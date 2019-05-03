@@ -54,7 +54,7 @@ interface
  *)
   procedure Stats(var Mng : tManager);
 (*
- Objetivo: muestra una serie de estadísticas de votación y participación de cada uno de los centros.
+ Objetivo: muestra una serie de estadísticas de votación y participación (Número, y porcentajes salvo en NULOS) de cada uno de los centros por separado.
  Entradas: la multilista (manager).
  Poscondición: si la multilista está vacía el procedimiento emitirá un mensaje de error por pantalla.
  *)
