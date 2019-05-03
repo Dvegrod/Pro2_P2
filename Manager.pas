@@ -149,7 +149,7 @@ end;
 function deleteCenters(var Mng: tManager):integer;
 var
 temp: integer;
-posc : tPosC;
+posc,preposc : tPosC;
 begin
   if isEmptyCenterList(Mng) then deleteCenters:= 0
   else
@@ -162,19 +162,24 @@ begin
           temp:= temp+1;
        end;
 
-    if not isEmptyCenterList(Mng) then (*Si la lista no se ha quedado vacía a base de eliminar el último elemento repetidas veces, se continúa*)
+    if not isEmptyCenterList(Mng) then begin (*Si la lista no se ha quedado vacía a base de eliminar el último elemento repetidas veces, se continúa*)
       posc := lastC(Mng);
+      preposc := previousC(posc,Mng);
+    end;
 
-    while not isEmptyCenterList(Mng) and (previousC(posc,Mng) <> NULLC) do
-         if getItemC(previousC(posc,Mng),Mng).validvotes = 0 then
+    while not isEmptyCenterList(Mng) and (preposc <> NULLC) do
+       with getItemC(preposc,Mng) do begin
+         if validvotes = 0 then
          begin
-            deletePartyList(previousC(posc,Mng),Mng);
-            writeln('* Remove: center ', getItemC(previousC(posc,Mng),Mng).centername);
-            deleteCenterAtPosition(previousC(posc,Mng), Mng);
+            deletePartyList(preposc,Mng);
+            writeln('* Remove: center ', centername);
+            deleteCenterAtPosition(preposc, Mng);
             temp:= temp+1;
          end
          else
             posc:= previousC(posc,Mng);
+         preposc := previousC(posc,Mng);
+       end;
     deleteCenters := temp;
   end;
 end;
