@@ -78,24 +78,24 @@ function insertCenter(cName: tCenterName; numVotes: tNumVotes; var Mng: tManager
 var
   newcenter: tItemC;
   newparty: tItem;
-  newpartylist: tList;
-  temp: boolean;
+  newpartylist: tList;  (* Variables dedicadas a guardar temporalmente las listas y elementos con los que se opera *)
+  temp: boolean;        (* Boolean temporal que controla el comportamiento de la función y su resultado *)
 
 begin
   if findItemC(cName,Mng) = NULLC then begin (*Comprueba si el centro ya existe. Si ya existe, no hace nada y devuelve FALSE*)  
     createEmptyList(newpartylist);
 
-    with newparty do begin
+    with newparty do begin    (* Partido B *)
       partyname:= BLANKVOTE;
       numvotes:= 0;
     end;
 
     temp:= InsertItem(newparty,newpartylist);
-    newparty.partyname:= NULLVOTE;
+    newparty.partyname:= NULLVOTE; (* Partido N *)
     temp:= temp and InsertItem(newparty,newpartylist);
 
-    if temp then
-    with newcenter do begin
+    if temp then (*Si se han insertado correctamente los partidos en la lista*)
+    with newcenter do begin (* Creacion del centro nuevo *)
       centername := cName;
       totalvoters := numVotes;
       validvotes := 0;
@@ -115,7 +115,7 @@ end;
 
 function insertPartyInCenter(cName : tCenterName; pName : tPartyName; var Mng : tManager): boolean;
 var
-   posc        : tPosC; (* Variable para consrevar la posición del centro en el que se va a operar *)
+   posc        : tPosC; (* Variable para conservar la posición del centro en el que se va a operar *)
    newlist     : tList; (* Puntero con el que se trabaja la lista *)
    newparty    : tItem; (* Nuevo nodo de lista de partidos *)
 
@@ -153,18 +153,21 @@ end;
 
 function deleteCenters(var Mng: tManager):integer;
 var
-temp: integer;
-posc,preposc : tPosC;
+temp: integer;           (* Variable que guarda el numero de centros eliminados *)
+posc,preposc : tPosC;    (* Variables posicion para iterar en la multilista*)
+tempcenter   : tItemC;   (* Variable que guarda el centro en el que esta situada la iteracion *)
 begin
   if isEmptyListC(Mng) then deleteCenters:= 0
   else
   begin
     temp:= 0;
-       while not isEmptyListC(Mng) and (getItemC(lastC(Mng),Mng).validvotes = 0) do begin (*Primero se borra el último centro de la lista todas las veces que sea necesario*)
-          deletePartyList(lastC(Mng),Mng);
-          writeln('* Remove: center ', getItemC(lastC(Mng),Mng).centername);
-          deleteAtPositionC(lastC(Mng),Mng);
+       tempcenter:= getItemC(lastC(Mng),Mng);
+       while (not isEmptyListC(Mng) and (tempcenter.validvotes = 0)) do begin (*Primero se borra el último centro de la lista todas las veces que sea necesario*)
+          deletePartyList(lastC(Mng),Mng); (*Borra su lista de partidos*)
+          writeln('* Remove: center ', tempcenter.centername);
+          deleteAtPositionC(lastC(Mng),Mng); (*Y luego borra el centro*)
           temp:= temp+1;
+          tempcenter:= getItemC(lastC(Mng),Mng)
        end;
 
     if not isEmptyListC(Mng) then begin (*Si la lista no se ha quedado vacía a base de eliminar el último elemento repetidas veces, se continúa*)
@@ -172,10 +175,12 @@ begin
       preposc := previousC(posc,Mng);
     end;
 
-    while not isEmptyListC(Mng) and (preposc <> NULLC) do
-       with getItemC(preposc,Mng) do begin
+    while not isEmptyListC(Mng) and (preposc <> NULLC) do begin  
+    (* Eliminacion de los elementos anteriores al ultimo que cumplen con la condicion de eliminacion*)
+       tempcenter:= getItemC(preposc,Mng);
+       with tempcenter do begin
          if validvotes = 0 then
-         begin
+         begin (* Proceso de eliminacion del centro *)
             deletePartyList(preposc,Mng);
             writeln('* Remove: center ', centername);
             deleteAtPositionC(preposc, Mng);
@@ -185,6 +190,7 @@ begin
             posc:= previousC(posc,Mng);
          preposc := previousC(posc,Mng);
        end;
+      end;
     deleteCenters := temp;
   end;
 end;
