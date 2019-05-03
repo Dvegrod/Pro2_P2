@@ -30,7 +30,7 @@ interface
  Entradas: un nombre de centro, un numero de votos y el manager.
  Salidas: el manager con el nuevo centro insertado en la posición correspondiente y un booleano que es TRUE solo si la operación se completó.
  Postcondición: Las posiciones de los elementos de la lista posteriores al insertado pueden cambiar de valor. Si había un centro idéntico en la lista
- ambos serán conservados (Pero esto dará lugar a problemas en las siguientes operaciones ).
+ no se modifica la lista y la operación devuelve FALSE.
  *)
   function insertPartyInCenter(cName: tCenterName; pName: tPartyName; var Mng: tManager):boolean;
 (*
@@ -82,7 +82,7 @@ var
   temp: boolean;
 
 begin
-  if findItemC(cName,Mng) = NULLC then begin   
+  if findItemC(cName,Mng) = NULLC then begin (*Comprueba si el centro ya existe. Si ya existe, no hace nada y devuelve FALSE*)  
     createEmptyList(newpartylist);
 
     with newparty do begin
@@ -121,9 +121,10 @@ var
 
 begin
   posc := findItemC(cName,Mng);
-  if (posc <> NULLC) then
+  if (posc <> NULLC) then (*Comprueba si existe el centro especificado*)
   begin
     newlist := getItemC(findItemC(cName,Mng),Mng).partylist; (* Se obtiene el puntero al primer elemento de la lista de partidos del centro *)
+    if findItem(pName, newlist) = NULL then begin (*Comprueba que el partido no exista ya en la lista*)
     with newparty do begin (* Construcción del nuevo partido *)
        partyname := pName;
        numvotes := 0;
@@ -133,11 +134,12 @@ begin
        insertPartyInCenter := true;
     end else
        insertPartyInCenter := false;
+    end else
+      insertPartyInCenter:= false;
   end
   else
     insertPartyInCenter:= false;
 end;
-
 
 procedure deletePartyList(cpos: tPosC; var Mng: tManager); (*Función auxiliar para el DeleteCenters*)
 var
